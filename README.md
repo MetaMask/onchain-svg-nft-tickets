@@ -71,10 +71,10 @@ If you are following along to this outside of a workshop, just make sure you hav
 
 ## Building and Running our Project
 
-We have several npm scripts to help us build and run our project locally
+We have several npm scripts to help us build and run our project locally.
 Let's get our local blockchain environment up and running. 
 
-Build our contracts and generate types we can use in our NextJS app.
+Build our contracts and generate the types that we can use in our NextJS app.
 
 From the root of the project run:
 
@@ -82,8 +82,9 @@ From the root of the project run:
 npm run build
 ```
 
-Run a local instance of Truffle and Ganache to generate accounts, and private keys for use in testing our Web3 app.
-Let's open a separate terminal and run:
+Run a local instance of Truffle and Ganache to generate accounts, and private keys for us to test our dApp.
+
+Run the following command:
 
 ```bash
 npm run local
@@ -259,7 +260,7 @@ const Mint: NextPage = () => {
 export default Mint;
 ```
 
-This `imports` our `Navigation` and adds the component in the area had reserved for it.
+This `imports` our `Navigation` and adds the component in the area we had reserved for it.
 
 We should see our navigation in the top right corner. We need to replace the text that says "MM CONNECT BUTTON".  
 But first, we need to set up two React hooks to listen and provide context for our connected user. 
@@ -277,7 +278,7 @@ export const useListen = () => {
   return () => {
     window.ethereum.on("accountsChanged", async (newAccounts: string[]) => {
       if (newAccounts.length > 0) {
-        // uppon receiving a new wallet, we'll request again the balance to synchronize the UI.
+        // upon receiving a new wallet, we'll request again the balance to synchronize the UI.
         const newBalance = await window.ethereum!.request({
           method: "eth_getBalance",
           params: [newAccounts[0], "latest"],
@@ -696,7 +697,7 @@ const TicketTypes: React.FC<Ticket> = ({
 const Tickets = ({ tickets }: TicketsProps) => {
   return (
     <TicketsView>
-      <h1>Ticket Types</h1>
+      <HeadingText>Ticket Types</HeadingText>
       <FlexContainer gap={1}>
         {tickets.map((ticket) => (
           <TicketTypes key={ticket.type} {...ticket} />
@@ -830,6 +831,8 @@ const mintTicket = async () => {
         setIsMinting(false);
       })
   };
+
+  const cantMint = !Boolean(wallet) && !isMinting
 ```
 
 This creates an async call on our `nftTickets` factory calling the `mintNFT` function and then either runs the `then` async function or catches the error. If we have a success, the `then` function will log the transaction after awaiting it, and then `setIsMinting` to false using a setter of our React state.
@@ -837,7 +840,7 @@ This creates an async call on our `nftTickets` factory calling the `mintNFT` fun
 Finally, we will update the button inside the `TicketsType` component's JSX and add a call to the `mintTicket()` function:
 
 ```typescript
-        <Button disabled={isMinting} onClick={mintTicket}>
+        <Button disabled={cantMint} onClick={mintTicket}>
           <SiEthereum /> {isMinting ? 'Minting...' : 'Mint'} Ticket
         </Button>
 ```
@@ -860,6 +863,10 @@ Create a new file in the `apps/web/components/styledComponents` directory named 
 
 ```js
 import styled from "styled-components";
+
+export const GridContainer = styled.div`
+  padding: 0.5em;
+`;
 
 export const Grid = styled.div`
   display: grid;
@@ -890,7 +897,7 @@ import { ETHTickets__factory } from "blockchain";
 import { config } from "../../lib/config";
 import { useMetaMask } from "../../hooks/useMetaMask";
 
-import { Grid, SvgItem } from "../styledComponents/ticketsOwned";
+import { GridContainer, Grid, SvgItem } from "../styledComponents/ticketsOwned";
 
 type NftData = {
   name: string,
@@ -956,10 +963,9 @@ const TicketsOwned = () => {
   ));
 
   return (
-    <>
-      <hr />
+    <GridContainer>
       <Grid columns={3} itemWidth={300} columnWidth={308}>{listOfTickets}</Grid>
-    </>
+    </GridContainer>
   );
 };
 
