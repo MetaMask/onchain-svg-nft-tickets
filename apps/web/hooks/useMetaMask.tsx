@@ -1,6 +1,18 @@
 import React, { type PropsWithChildren } from "react";
 
-type ConnectAction = { type: "connect"; wallet: string; balance: string };
+type ConnectAction = {
+  type: "connect";
+  wallet: string;
+  balance: string;
+  networkId: string;
+};
+type WrongNetworkAction = {
+  type: "wrongNetwork";
+  wallet: string;
+  balance?: string;
+  networkId?: string;
+};
+
 type DisconnectAction = { type: "disconnect" };
 type PageLoadedAction = {
   type: "pageLoaded";
@@ -10,22 +22,25 @@ type PageLoadedAction = {
 };
 type LoadingAction = { type: "loading" };
 type IdleAction = { type: "idle" };
-
+type NetworkSwitchedAction = { type: "networkSwitched"; networkId: string };
 type Action =
   | ConnectAction
   | DisconnectAction
   | PageLoadedAction
   | LoadingAction
-  | IdleAction;
+  | IdleAction
+  | WrongNetworkAction
+  | NetworkSwitchedAction;
 
 type Dispatch = (action: Action) => void;
 
-type Status = "loading" | "idle" | "pageNotLoaded";
+type Status = "loading" | "idle" | "pageNotLoaded" | "wrongNetwork";
 
 type State = {
   wallet: string | null;
   isMetaMaskInstalled: boolean;
   status: Status;
+  networkId: string | null;
   balance: string | null;
 };
 
@@ -34,6 +49,7 @@ const initialState: State = {
   isMetaMaskInstalled: false,
   status: "loading",
   balance: null,
+  networkId: null,
 } as const;
 
 function metamaskReducer(state: State, action: Action): State {
@@ -44,6 +60,21 @@ function metamaskReducer(state: State, action: Action): State {
       const info = JSON.stringify(newState);
       window.localStorage.setItem("metamaskState", info);
 
+      return newState;
+    }
+    case "wrongNetwork": {
+      const { wallet, balance, networkId } = action;
+
+      const newState = {
+        ...state,
+        wallet,
+        balance,
+        networkId,
+        status: "wrongNetwork",
+      } as State;
+
+      const info = JSON.stringify(newState);
+      window.localStorage.setItem("metamaskState", info);
       return newState;
     }
     case "disconnect": {
@@ -63,7 +94,14 @@ function metamaskReducer(state: State, action: Action): State {
     case "idle": {
       return { ...state, status: "idle" };
     }
-
+    case "networkSwitched": {
+      const { networkId } = action;
+      const status =
+        networkId === process.env.NEXT_PUBLIC_NETWORK_ID
+          ? "idle"
+          : "wrongNetwork";
+      return { ...state, status, networkId };
+    }
     default: {
       throw new Error("Unhandled action type");
     }

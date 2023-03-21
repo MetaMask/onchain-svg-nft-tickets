@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import Image from "next/image";
 
 import { ETHTickets__factory } from "blockchain";
-import { config } from "../../lib/config";
+import { config, isSupportedNetwork } from "../../lib/config";
 import { useMetaMask } from "../../hooks/useMetaMask";
 
 import { GridContainer, Grid, SvgItem } from "../styledComponents/ticketsOwned";
@@ -33,7 +33,13 @@ const TicketsOwned = () => {
       const signer = provider.getSigner();
 
       const factory = new ETHTickets__factory(signer);
-      const nftTickets = factory.attach(config.contractAddress);
+      const networkId = process.env.NEXT_PUBLIC_NETWORK_ID
+
+      if(!isSupportedNetwork(networkId)) {
+        throw new Error('Set either `0x5` for goerli or `0x13881` for mumbai in apps/web/.env or .env.local')
+      }
+      
+      const nftTickets = factory.attach(config[networkId].contractAddress);
 
       const ticketsRetrieved: TicketFormatted[] = [];
 

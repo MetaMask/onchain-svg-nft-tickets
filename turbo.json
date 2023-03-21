@@ -1,4 +1,5 @@
 {
+  "globalEnv": ["NEXT_PUBLIC_NETWORK_ID", "NEXT_PUBLIC_INFURA_PROJECT_ID"],
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {

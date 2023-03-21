@@ -1,16 +1,23 @@
 import Link from "next/link";
 import { useListen } from "../hooks/useListen";
 import { useMetaMask } from "../hooks/useMetaMask";
+import { config, isSupportedNetwork } from "../lib/config";
 
-import { Button, FlexContainer, FlexItem, } from "./styledComponents/general";
-import { NavigationView, Balance, RightNav, Logo } from "./styledComponents/navigation";
-import { SiEthereum } from 'react-icons/si';
+import { Button, FlexContainer, FlexItem } from "./styledComponents/general";
+import {
+  NavigationView,
+  Balance,
+  RightNav,
+  Logo,
+} from "./styledComponents/navigation";
+import { SiEthereum } from "react-icons/si";
 
 export default function Navigation() {
   const {
     dispatch,
     state: { status, isMetaMaskInstalled, wallet, balance },
   } = useMetaMask();
+
   const listen = useListen();
 
   const showInstallMetaMask =
@@ -31,11 +38,56 @@ export default function Navigation() {
         method: "eth_getBalance",
         params: [accounts[0], "latest"],
       });
-      dispatch({ type: "connect", wallet: accounts[0], balance });
 
+      const networkId = await window.ethereum!.request({
+        method: "eth_chainId",
+      });
+
+
+      if (networkId === process.env.NEXT_PUBLIC_NETWORK_ID) {
+        dispatch({ type: "connect", wallet: accounts[0], balance, networkId });
+      } else {
+        dispatch({
+          type: "wrongNetwork",
+          wallet: accounts[0],
+          balance,
+          networkId,
+        });
+      }
       // we can register an event listener for changes to the user's wallet
       listen();
     }
+  };
+
+  const handleSwitchNetwork = async () => {
+    const chainId = process.env.NEXT_PUBLIC_NETWORK_ID
+    if(!isSupportedNetwork(chainId)) {
+      throw new Error('Unsupported network, change env files')
+    }
+
+    await window.ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [
+        {
+          chainId: process.env.NEXT_PUBLIC_NETWORK_ID, // '0x3830303031'
+          blockExplorerUrls: [config[chainId].blockExplorer], // ['https://mumbai.polygonscan.com']
+          chainName: config[chainId].name, // 'Mumbai Testnet'
+          nativeCurrency: {
+            decimals: 18,
+            name: config[chainId].name,
+            symbol: config[chainId].symbol,
+          },
+          rpcUrls: [config[chainId].rpcUrl], // ['https://matic-mumbai.chainstacklabs.com']
+        },
+      ],
+    });
+
+    dispatch({
+      type: 'networkSwitched',
+      networkId: chainId
+    })
+
+
   };
 
   const handleDisconnect = () => {
@@ -43,8 +95,8 @@ export default function Navigation() {
   };
 
   const formatAddress = (addr: string) => {
-    return `${addr.substr(0, 6)}...${addr.substr(-4)}`
-  }
+    return `${addr.substring(0, 6)}...${addr.substring(-4)}`;
+  };
 
   return (
     <NavigationView>
@@ -66,21 +118,33 @@ export default function Navigation() {
                 Install MetaMask
               </Link>
             )}
-            {wallet && balance && (
-              <>
-                {isConnected && <Button textSize={10} onClick={handleDisconnect}>Disconnect</Button>}
-                <a
+            <>
+              {isConnected && status !== 'wrongNetwork' && (
+                <Button textSize={10} onClick={handleDisconnect}>
+                  Disconnect
+                </Button>
+              )}
+              {status === "wrongNetwork" && (
+                <Button textSize={10} onClick={handleSwitchNetwork}>
+                  Switch Network
+                </Button>
+              )}
+              {!!wallet && (
+                <Link
                   className="text_link tooltip-bottom"
-                  href={`https://etherscan.io/address/${wallet}`} target="_blank"
+                  href={`https://etherscan.io/address/${wallet}`}
+                  target="_blank"
                   data-tooltip="Open in Etherscan"
                 >
                   {formatAddress(wallet)}
-                </a>
+                </Link>
+              )}
+              {!!balance && (
                 <Balance>
-                  {(parseInt(balance) / 1000000000000000000).toFixed(2)}{" "}ETH
+                  {(parseInt(balance) / 1000000000000000000).toFixed(2)} ETH
                 </Balance>
-              </>
-            )}
+              )}
+            </>
           </RightNav>
         </FlexItem>
       </FlexContainer>

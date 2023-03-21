@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useMetaMask } from "../../hooks/useMetaMask";
 import { ETHTickets__factory } from "blockchain";
 import { ethers } from "ethers";
-import { config } from "../../lib/config";
+import { config, isSupportedNetwork } from "../../lib/config";
 
 import { SiEthereum } from 'react-icons/si';
 
@@ -42,7 +42,13 @@ const TicketTypes: React.FC<Ticket> = ({
     const signer = provider.getSigner();
 
     const factory = new ETHTickets__factory(signer);
-    const nftTickets = factory.attach(config.contractAddress);
+    const networkId = process.env.NEXT_PUBLIC_NETWORK_ID
+
+    if(!isSupportedNetwork(networkId)) {
+      throw new Error('Set either `0x5` for goerli or `0x13881` for mumbai in apps/web/.env or .env.local')
+    }
+    
+    const nftTickets = factory.attach(config[networkId].contractAddress);
 
     nftTickets
       .mintNFT({
