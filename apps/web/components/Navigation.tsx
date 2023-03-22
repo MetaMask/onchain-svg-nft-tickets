@@ -69,15 +69,15 @@ export default function Navigation() {
       method: "wallet_addEthereumChain",
       params: [
         {
-          chainId: process.env.NEXT_PUBLIC_NETWORK_ID, // '0x3830303031'
-          blockExplorerUrls: [config[chainId].blockExplorer], // ['https://mumbai.polygonscan.com']
-          chainName: config[chainId].name, // 'Mumbai Testnet'
+          chainId: process.env.NEXT_PUBLIC_NETWORK_ID,
+          blockExplorerUrls: [config[chainId].blockExplorer],
+          chainName: config[chainId].name,
           nativeCurrency: {
             decimals: 18,
             name: config[chainId].name,
             symbol: config[chainId].symbol,
           },
-          rpcUrls: [config[chainId].rpcUrl], // ['https://matic-mumbai.chainstacklabs.com']
+          rpcUrls: [config[chainId].rpcUrl],
         },
       ],
     });
@@ -86,8 +86,6 @@ export default function Navigation() {
       type: 'networkSwitched',
       networkId: chainId
     })
-
-
   };
 
   const handleDisconnect = () => {
@@ -95,7 +93,7 @@ export default function Navigation() {
   };
 
   const formatAddress = (addr: string) => {
-    return `${addr.substring(0, 6)}...${addr.substring(-4)}`;
+    return `${addr.substr(0, 6)}...${addr.substr(-4)}`;
   };
 
   return (
