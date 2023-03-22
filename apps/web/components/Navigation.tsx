@@ -93,7 +93,7 @@ export default function Navigation() {
   };
 
   const formatAddress = (addr: string) => {
-    return `${addr.substr(0, 6)}...${addr.substr(-4)}`;
+    return `${addr.substring(0, 5)}...${addr.substring(39)}`;
   };
 
   return (
