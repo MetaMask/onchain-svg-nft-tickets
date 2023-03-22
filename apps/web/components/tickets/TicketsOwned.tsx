@@ -69,8 +69,8 @@ const TicketsOwned = () => {
   let listOfTickets = ticketCollection.map((ticket) => (
     <SvgItem pad={4} key={`ticket${ticket.tokenId}`}>
       <Image
-        width={300}
-        height={300}
+        width={200}
+        height={200}
         src={ticket.svgImage}
         alt={`Ticket# ${ticket.tokenId}`}
       />
@@ -79,7 +79,7 @@ const TicketsOwned = () => {
 
   return (
     <GridContainer>
-      <Grid columns={3} itemWidth={300} columnWidth={308}>{listOfTickets}</Grid>
+      <Grid columns={4} itemWidth={210} columnWidth={218}>{listOfTickets}</Grid>
     </GridContainer>
   );
 };
