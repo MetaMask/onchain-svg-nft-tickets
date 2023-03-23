@@ -12,7 +12,7 @@ export const Logo = styled.div`
   display: inline-block;
   line-height: 36px;
   height: 36px;
-  background: linear-gradient(to right, #30CFD0, #c43ad6);
+  background: linear-gradient(to right, #2bf9f9, #e757fa);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
