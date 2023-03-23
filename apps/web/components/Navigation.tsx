@@ -65,12 +65,16 @@ export default function Navigation() {
       throw new Error('Unsupported network, change env files')
     }
 
+    const blockExplorer = config[chainId].blockExplorer;
+
     await window.ethereum.request({
       method: "wallet_addEthereumChain",
       params: [
         {
           chainId: process.env.NEXT_PUBLIC_NETWORK_ID,
-          blockExplorerUrls: [config[chainId].blockExplorer],
+          ...(blockExplorer ? {
+            blockExplorerUrls: [config[chainId].blockExplorer]
+          } : {}),
           chainName: config[chainId].name,
           nativeCurrency: {
             decimals: 18,

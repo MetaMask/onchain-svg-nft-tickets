@@ -16,8 +16,8 @@ export const useListen = () => {
           params: [newAccounts[0], "latest"],
         });
 
-        const networkId = await window.ethereum.request({
-          method: "eth_getNetwork",
+        const networkId = await window.ethereum!.request({
+          method: "eth_chainId",
         });
 
         if (isSupportedNetwork(networkId)) {

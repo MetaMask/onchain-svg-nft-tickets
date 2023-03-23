@@ -7,6 +7,7 @@ import { config, isSupportedNetwork } from "../../lib/config";
 import { useMetaMask } from "../../hooks/useMetaMask";
 
 import { GridContainer, Grid, SvgItem } from "../styledComponents/ticketsOwned";
+import { Button } from "../styledComponents/general";
 
 type NftData = {
   name: string,
@@ -25,7 +26,7 @@ type TicketFormatted = {
 
 const TicketsOwned = () => {
   const [ticketCollection, setTicketCollection] = useState<TicketFormatted[]>([]);
-  const { state: { wallet: address }, } = useMetaMask();
+  const { state: { wallet: address , networkId }, dispatch } = useMetaMask();
 
   useEffect(() => {
     if (typeof window !== "undefined" && address !== null) {
@@ -33,10 +34,9 @@ const TicketsOwned = () => {
       const signer = provider.getSigner();
 
       const factory = new ETHTickets__factory(signer);
-      const networkId = process.env.NEXT_PUBLIC_NETWORK_ID
 
       if(!isSupportedNetwork(networkId)) {
-        throw new Error('Set either `0x5` for goerli or `0x13881` for mumbai in apps/web/.env or .env.local')
+        return;
       }
       
       const nftTickets = factory.attach(config[networkId].contractAddress);
@@ -64,7 +64,48 @@ const TicketsOwned = () => {
         Promise.all(promises).then(() => setTicketCollection(ticketsRetrieved));
       });
     }
-  }, [address]);
+  }, [address, networkId]);
+
+  const handleSwitchNetwork = async () => {
+    const chainId = process.env.NEXT_PUBLIC_NETWORK_ID
+    if(!isSupportedNetwork(chainId)) {
+      throw new Error('Unsupported network, change env files')
+    }
+
+    const blockExplorer = config[chainId].blockExplorer;
+
+    await window.ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [
+        {
+          chainId: process.env.NEXT_PUBLIC_NETWORK_ID,
+          ...(blockExplorer ? {
+            blockExplorerUrls: [config[chainId].blockExplorer]
+          } : {}),
+          chainName: config[chainId].name,
+          nativeCurrency: {
+            decimals: 18,
+            name: config[chainId].name,
+            symbol: config[chainId].symbol,
+          },
+          rpcUrls: [config[chainId].rpcUrl],
+        },
+      ],
+    });
+
+    dispatch({
+      type: 'networkSwitched',
+      networkId: chainId
+    })
+  };
+
+  if (!isSupportedNetwork(networkId)) {
+    return (
+      <Button textSize={10} onClick={handleSwitchNetwork}>
+        Switch Network
+      </Button>
+    )
+  }
 
   let listOfTickets = ticketCollection.map((ticket) => (
     <SvgItem pad={4} key={`ticket${ticket.tokenId}`}>
