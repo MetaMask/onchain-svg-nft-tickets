@@ -1,10 +1,10 @@
 export const config = {
-  '0x13881': {
-    name: 'Mumbai',
+  '0x539': {
+    name: 'Localhost 9545',
     contractAddress: "0x485950f7A14140F5561320229CdD7A2B26e39F9E",
-    symbol: "MATIC",
-    blockExplorer: "https://mumbai.polygonscan.com/",
-    rpcUrl: "https://rpc-mumbai.maticvigil.com/"
+    symbol: "ETH",
+    blockExplorer: null, // leave null for testing on localhost (or Blockscout/Docker)
+    rpcUrl: `http://localhost:9545`
   },
   '0x5': {
     name: 'Goerli',
@@ -13,12 +13,12 @@ export const config = {
     blockExplorer: 'https://goerli.etherscan.io/',
     rpcUrl: `https://goerli.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_PROJECT_ID}`
   },
-  '0x1': {
-    name: 'Localhost 9545',
+  '0x13881': {
+    name: 'Mumbai',
     contractAddress: "0x485950f7A14140F5561320229CdD7A2B26e39F9E",
-    symbol: "ETH",
-    blockExplorer: '',
-    rpcUrl: `http://localhost:9545`
+    symbol: "MATIC",
+    blockExplorer: "https://mumbai.polygonscan.com/",
+    rpcUrl: "https://rpc-mumbai.maticvigil.com/"
   }
 };
 
@@ -28,6 +28,6 @@ export const config = {
  * @param {string} [id] - The network ID of the network you want to check.
  * @returns A function that takes an id and returns a boolean.
  */
-export const isSupportedNetwork = (id?: string): id is keyof typeof config => {
+export const isSupportedNetwork = (id?: string | null): id is keyof typeof config => {
   return !!(id && id in config);
 } 
