@@ -32,7 +32,10 @@ export const Button = styled.button`
   text-transform: uppercase;
   padding: 1em 0.75em;
   display: inline-block;
-  margin: 0 1em 0 0;
+  margin-top: ${props => props.marginT | 0}em;
+  margin-right: ${props => props.marginR | 0}em;
+  margin-bottom: ${props => props.marginB | 0}em;
+  margin-left: ${props => props.marginL | 0}em;
   cursor: pointer;
   cursor: hand;
   user-select: none;

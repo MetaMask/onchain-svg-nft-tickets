@@ -22,7 +22,7 @@ interface TicketsProps {
 }
 
 const TicketTypes: React.FC<Ticket> = ({
-  type, event, description, price, priceHexValue,
+  type, event, description, price, priceHexValue
 }) => {
 
   const { state: { wallet }, } = useMetaMask();

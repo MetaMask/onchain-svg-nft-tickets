@@ -9,21 +9,20 @@ export const Layout: React.FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     if (typeof window !== undefined) {
-      // start by checking if window.ethereum is present, indicating a wallet extension
+      // is window.ethereum is present? indicating a wallet extension
       const ethereumProviderInjected = typeof window.ethereum !== "undefined";
-      // this could be other wallets so we can verify if we are dealing with metamask
-      // using the boolean constructor to be explicit and not let this be used as a falsy value (optional)
+      // Ensure it is MetaMask
       const isMetaMaskInstalled =
         ethereumProviderInjected && Boolean(window.ethereum.isMetaMask);
 
       const local = window.localStorage.getItem("metamaskState");
 
-      // if user was previously connected, start listening to MM
+      // if user was previously connected, start listening to MetaMask wallet changes
       if (local) {
         listen();
       }
 
-      // local could be null if not present in LocalStorage
+      // local variable could be null if not present in LocalStorage
       const { wallet, balance } = local
         ? JSON.parse(local)
         : // backup if local storage is empty

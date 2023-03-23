@@ -20,14 +20,14 @@ const Mint: NextPage = () => {
     {
       type: "ga",
       event: "ETH Atlantis",
-      description: "General Admission Ticket",
+      description: "General Admission",
       price: ethGa,
       priceHexValue: ethGaHex, // '0x2386f26fc10000' *eserialize.com
     },
     {
       type: "vip",
       event: "ETH Atlantis",
-      description: "VIP Ticket",
+      description: "VIP",
       price: ethVip,
       priceHexValue: ethVipHex, // '0x470de4df820000' *eserialize.com
     },

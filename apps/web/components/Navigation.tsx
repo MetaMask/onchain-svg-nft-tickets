@@ -1,22 +1,15 @@
 import Link from "next/link";
 import { useListen } from "../hooks/useListen";
 import { useMetaMask } from "../hooks/useMetaMask";
-import { config, isSupportedNetwork } from "../lib/config";
 
 import { Button, FlexContainer, FlexItem } from "./styledComponents/general";
-import {
-  NavigationView,
-  Balance,
-  RightNav,
-  Logo,
-} from "./styledComponents/navigation";
+import { NavigationView, Balance, RightNav, Logo } from "./styledComponents/navigation";
 import { SiEthereum } from "react-icons/si";
+import SwitchNetwork from "./SwitchNetwork";
 
 export default function Navigation() {
-  const {
-    dispatch,
-    state: { status, isMetaMaskInstalled, wallet, balance },
-  } = useMetaMask();
+  const { dispatch, state: { status, isMetaMaskInstalled, wallet, balance } }
+    = useMetaMask();
 
   const listen = useListen();
 
@@ -54,42 +47,9 @@ export default function Navigation() {
           networkId,
         });
       }
-      // we can register an event listener for changes to the user's wallet
+      // register event listener for metamask wallet changes
       listen();
     }
-  };
-
-  const handleSwitchNetwork = async () => {
-    const chainId = process.env.NEXT_PUBLIC_NETWORK_ID
-    if(!isSupportedNetwork(chainId)) {
-      throw new Error('Unsupported network, change env files')
-    }
-
-    const blockExplorer = config[chainId].blockExplorer;
-
-    await window.ethereum.request({
-      method: "wallet_addEthereumChain",
-      params: [
-        {
-          chainId: process.env.NEXT_PUBLIC_NETWORK_ID,
-          ...(blockExplorer ? {
-            blockExplorerUrls: [config[chainId].blockExplorer]
-          } : {}),
-          chainName: config[chainId].name,
-          nativeCurrency: {
-            decimals: 18,
-            name: config[chainId].name,
-            symbol: config[chainId].symbol,
-          },
-          rpcUrls: [config[chainId].rpcUrl],
-        },
-      ],
-    });
-
-    dispatch({
-      type: 'networkSwitched',
-      networkId: chainId
-    })
   };
 
   const handleDisconnect = () => {
@@ -111,32 +71,31 @@ export default function Navigation() {
         <FlexItem widthPercent={50}>
           <RightNav widthPixel={wallet && balance ? 300 : 119}>
             {showConnectButton && (
-              <Button textSize={10} onClick={handleConnect}>
+              <Button textSize={10} marginR={1} onClick={handleConnect}>
                 {status === "loading" ? "loading..." : "Connect Wallet"}
               </Button>
             )}
             {showInstallMetaMask && (
-              <Link href="https://metamask.io/" target="_blank">
+              <Link href="https://metamask.io" target="_blank">
                 Install MetaMask
               </Link>
             )}
             <>
               {isConnected && status !== 'wrongNetwork' && (
-                <Button textSize={10} onClick={handleDisconnect}>
+                <Button textSize={10} marginR={1} onClick={handleDisconnect}>
                   Disconnect
                 </Button>
               )}
-              {status === "wrongNetwork" && (
-                <Button textSize={10} onClick={handleSwitchNetwork}>
-                  Switch Network
-                </Button>
-              )}
+              {
+                status === "wrongNetwork" &&
+                <SwitchNetwork {...{ textSize: 10, marginT: 0, marginR: 1, marginB: 0, marginL: 0 }} />
+              }
               {!!wallet && (
                 <Link
                   className="text_link tooltip-bottom"
                   href={`https://etherscan.io/address/${wallet}`}
                   target="_blank"
-                  data-tooltip="Open in Etherscan"
+                  data-tooltip="Open in Block Explorer"
                 >
                   {formatAddress(wallet)}
                 </Link>

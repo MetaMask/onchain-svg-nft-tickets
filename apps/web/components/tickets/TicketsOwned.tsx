@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ETHTickets__factory } from "blockchain";
 import { config, isSupportedNetwork } from "../../lib/config";
 import { useMetaMask } from "../../hooks/useMetaMask";
+import SwitchNetwork from "../SwitchNetwork";
 
 import { GridContainer, Grid, SvgItem } from "../styledComponents/ticketsOwned";
 import { Button } from "../styledComponents/general";
@@ -26,7 +27,7 @@ type TicketFormatted = {
 
 const TicketsOwned = () => {
   const [ticketCollection, setTicketCollection] = useState<TicketFormatted[]>([]);
-  const { state: { wallet: address , networkId }, dispatch } = useMetaMask();
+  const { state: { wallet: address, networkId }, dispatch } = useMetaMask();
 
   useEffect(() => {
     if (typeof window !== "undefined" && address !== null) {
@@ -35,10 +36,10 @@ const TicketsOwned = () => {
 
       const factory = new ETHTickets__factory(signer);
 
-      if(!isSupportedNetwork(networkId)) {
+      if (!isSupportedNetwork(networkId)) {
         return;
       }
-      
+
       const nftTickets = factory.attach(config[networkId].contractAddress);
 
       const ticketsRetrieved: TicketFormatted[] = [];
@@ -66,47 +67,6 @@ const TicketsOwned = () => {
     }
   }, [address, networkId]);
 
-  const handleSwitchNetwork = async () => {
-    const chainId = process.env.NEXT_PUBLIC_NETWORK_ID
-    if(!isSupportedNetwork(chainId)) {
-      throw new Error('Unsupported network, change env files')
-    }
-
-    const blockExplorer = config[chainId].blockExplorer;
-
-    await window.ethereum.request({
-      method: "wallet_addEthereumChain",
-      params: [
-        {
-          chainId: process.env.NEXT_PUBLIC_NETWORK_ID,
-          ...(blockExplorer ? {
-            blockExplorerUrls: [config[chainId].blockExplorer]
-          } : {}),
-          chainName: config[chainId].name,
-          nativeCurrency: {
-            decimals: 18,
-            name: config[chainId].name,
-            symbol: config[chainId].symbol,
-          },
-          rpcUrls: [config[chainId].rpcUrl],
-        },
-      ],
-    });
-
-    dispatch({
-      type: 'networkSwitched',
-      networkId: chainId
-    })
-  };
-
-  if (!isSupportedNetwork(networkId)) {
-    return (
-      <Button textSize={10} onClick={handleSwitchNetwork}>
-        Switch Network
-      </Button>
-    )
-  }
-
   let listOfTickets = ticketCollection.map((ticket) => (
     <SvgItem pad={4} key={`ticket${ticket.tokenId}`}>
       <Image
@@ -119,9 +79,14 @@ const TicketsOwned = () => {
   ));
 
   return (
-    <GridContainer>
-      <Grid columns={4} itemWidth={210} columnWidth={218}>{listOfTickets}</Grid>
-    </GridContainer>
+    <>
+      {isSupportedNetwork(networkId)
+        ? <GridContainer>
+            <Grid columns={4} itemWidth={210} columnWidth={218}>{listOfTickets}</Grid>
+          </GridContainer>
+        : <SwitchNetwork {...{ textSize: 10, marginT: 1, marginR: 0, marginB: 0, marginL: 1 }} />
+      }
+    </>
   );
 };
 
