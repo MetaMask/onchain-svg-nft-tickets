@@ -131,7 +131,7 @@ export const Logo = styled.div`
   display: inline-block;
   line-height: 36px;
   height: 36px;
-  background: linear-gradient(to right, #30CFD0, #c43ad6);
+  background: linear-gradient(to right, #2bf9f9, #e757fa);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -174,11 +174,11 @@ export const Button = styled.button`
 
   box-shadow: 0 0 6px 0 rgba(157, 96, 212, 0.5);
   border: solid 1px transparent;
-  background-image: linear-gradient(to right, #30CFD0, #c43ad6);
+  background-image: linear-gradient(to right, #2bf9f9, #e757fa);
   background-origin: border-box;
   background-clip: content-box, border-box;
 
-  background: linear-gradient(to right, #30CFD0, #c43ad6);
+  background: linear-gradient(to right, #2bf9f9, #e757fa);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
