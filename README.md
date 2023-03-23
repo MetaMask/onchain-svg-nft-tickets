@@ -1,12 +1,28 @@
-# Web3 Dubai MetaMask Workshop (Follow Along)
+# MetaMask Onchain SVG NFT Tickets Workshop
+
+This workshop starts with a [React](https://beta.reactjs.org) / [NextJS](https://nextjs.org) mono repo setup and walks attendees through building out a Web3 dApp that utilizes some pretty great tools to get you started building in Web3.  
+
+A mono repo so that we can have separation of our **blockchain** and **web** projects respectfully. Smart contracts in one folder and our React frontend in another with the ability to have their own package dependencies but also be linked together.  
+
+We have chosen [Turbo](https://turbo.build) and incremental bundler/build system optimized for mono repos, JavaScript and TypeScript.
+
+We use NextJS a popular React framework very popular for building web3 projects so that those with traditional web development experience will feel more at home with our setup.
+
+This workshop also utilizes [TypeScript](https://www.typescriptlang.org/docs/handbook/intro.html) and [TypeChain](https://github.com/dethcrypto/TypeChain) (TypeScript bindings for Ethereum smart contracts) to ensure that we can extend JavaScript and overall improve the developer experience. These choices enable developers to add type safety. Moreover, TypeScript itself provides various other features, like interfaces, type aliases, abstract classes, function overloading, tuple, generics, etc.  
+
+Finally, we use our suite of ConsenSys tools like [MetaMask SDK](https://metamask.io/sdk), [Truffle](https://trufflesuite.com), and [Ganache](https://trufflesuite.com/ganache) and give you a very well rounded start to using our tools in conjunction with each other.  
+
+We have purposefully made choices to reduce the number of overall dependencies outside of configuration for this type of project. We do some things like state management and deployment of contracts in a more manual fashion as to teach you the basics rather than lean on other platforms to do this for you. After taking this workshop yu should have a pretty solid understanding of what it takes to build and deploy a basic dApp to a testnet like Ethereum's Goerli or Polygon's Mumbai.
 
 ## Prerequisites:
 - NodeJS 18.1 & NPM 9.5.0
 - Code Editor
-- Git & GitHub account 
+- Git / GitHub account 
 - [MetaMask Extension](https://metamask.io/download) Installed
-- Knowledge of JavaScript, TypeScript, and React (is a plus)
-- Eagerness to learn NextJS and some Solidity
+- Knowledge of JavaScript, TypeScript, and React (is a plus but not required)
+- Truffle and Ganache installed
+
+Before getting started ensure you are on NodeJS 18 and that you have Truffle and Ganache installed globally with NPM:
 
 ```bash
 npm i truffle ganache -g
@@ -22,20 +38,7 @@ cd onchain-svg-nft-tickets &&
 git checkout start && npm i
 ```
 
-With our repo cloned and dependencies installed, let's note the architecture:
-
-- A mono repo using [Turbo](https://turbo.build) 
-    - Incremental bundler/build system optimized for mono repos, JS & TS
-    - A bundler that is the successor to webpack written in Rust and fast
-    - Mission for Turbo pack is to support everything that `next dev` supports
-- Separating our `blockchain` and `web` projects
-- [React](https://beta.reactjs.org) & [NextJS](https://nextjs.org)
-- [Truffle](https://trufflesuite.com) & [Ganache](https://trufflesuite.com/ganache)
-
-We have a solid framework to build with. 
-
-If you're a web2 dev getting started with web3 these tools should feel familiar.
-The idea is to use NextJS, React and TS, and get you started with a solid full-stack web3 dApp all in one repo.
+With our repo cloned and dependencies installed, we have a solid framework to build with. 
 
 ## Run Our NextJS Project
 
