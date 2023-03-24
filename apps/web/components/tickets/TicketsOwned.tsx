@@ -26,7 +26,7 @@ type TicketFormatted = {
 
 const TicketsOwned = () => {
   const [ticketCollection, setTicketCollection] = useState<TicketFormatted[]>([]);
-  const { state: { wallet: address, networkId }, dispatch } = useMetaMask();
+  const { state: { wallet: address, networkId } } = useMetaMask();
 
   useEffect(() => {
     if (typeof window !== "undefined" && address !== null) {
