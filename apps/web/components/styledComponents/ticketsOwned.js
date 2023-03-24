@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
-export const GridContainer = styled.div`
-  padding: 0.5em;
+export const TicketsOwnedView = styled.div`
+  padding: 1em;
+  border-top: 1px solid #333;
 `;
 
 export const Grid = styled.div`

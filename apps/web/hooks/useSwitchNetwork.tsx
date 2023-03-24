@@ -1,5 +1,5 @@
 import { config, isSupportedNetwork } from "../lib/config";
-import { useMetaMask } from "../hooks/useMetaMask";
+import { useMetaMask } from "./useMetaMask";
 
 
 export const useSwitchNetwork = () => {

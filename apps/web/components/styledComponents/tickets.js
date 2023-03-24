@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 
 export const TicketsView = styled.div`
-  padding: 1em;
+  padding-top: 0em;
+  padding-right: 1em;
+  padding-bottom: 1em;
+  padding-left: 1em;
   border-bottom: 1px solid #333;
 `;
 
