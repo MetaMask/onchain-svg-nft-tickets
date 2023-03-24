@@ -7,7 +7,7 @@ import { config, isSupportedNetwork } from "../../lib/config";
 import { useMetaMask } from "../../hooks/useMetaMask";
 import SwitchNetwork from "../SwitchNetwork";
 
-import { Grid, SvgItem } from "../styledComponents/ticketsOwned";
+import { TicketsOwnedView, Grid, SvgItem } from "../styledComponents/ticketsOwned";
 
 type NftData = {
   name: string,
@@ -40,7 +40,6 @@ const TicketsOwned = () => {
       }
 
       const nftTickets = factory.attach(config[networkId].contractAddress);
-
       const ticketsRetrieved: TicketFormatted[] = [];
 
       nftTickets.walletOfOwner(address).then((ownedTickets) => {
@@ -78,12 +77,17 @@ const TicketsOwned = () => {
   ));
 
   return (
-    <>
+    <TicketsOwnedView>
       {isSupportedNetwork(networkId)
-        ? <Grid columns={4} itemWidth={210} columnWidth={218}>{listOfTickets}</Grid>
+        ? <>
+          {listOfTickets.length
+            ? <Grid columns={4} itemWidth={210} columnWidth={218}>{listOfTickets}</Grid>
+            : <span>No ETH Atlantis NFTs in this wallet</span>
+          }
+        </>
         : <SwitchNetwork {...{ textSize: 10, marginT: 1, marginR: 0, marginB: 0, marginL: 1 }} />
       }
-    </>
+    </TicketsOwnedView>
   );
 };
 

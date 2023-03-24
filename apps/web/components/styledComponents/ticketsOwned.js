@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const TicketsOwnedView = styled.div`
   padding: 1em;
   border-top: 1px solid #333;
+  color: #999;
 `;
 
 export const Grid = styled.div`
