@@ -7,8 +7,7 @@ import { config, isSupportedNetwork } from "../../lib/config";
 import { useMetaMask } from "../../hooks/useMetaMask";
 import SwitchNetwork from "../SwitchNetwork";
 
-import { GridContainer, Grid, SvgItem } from "../styledComponents/ticketsOwned";
-import { Button } from "../styledComponents/general";
+import { Grid, SvgItem } from "../styledComponents/ticketsOwned";
 
 type NftData = {
   name: string,
@@ -81,9 +80,7 @@ const TicketsOwned = () => {
   return (
     <>
       {isSupportedNetwork(networkId)
-        ? <GridContainer>
-            <Grid columns={4} itemWidth={210} columnWidth={218}>{listOfTickets}</Grid>
-          </GridContainer>
+        ? <Grid columns={4} itemWidth={210} columnWidth={218}>{listOfTickets}</Grid>
         : <SwitchNetwork {...{ textSize: 10, marginT: 1, marginR: 0, marginB: 0, marginL: 1 }} />
       }
     </>
