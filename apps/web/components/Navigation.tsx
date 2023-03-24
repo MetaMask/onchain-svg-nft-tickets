@@ -36,7 +36,6 @@ export default function Navigation() {
         method: "eth_chainId",
       });
 
-
       if (networkId === process.env.NEXT_PUBLIC_NETWORK_ID) {
         dispatch({ type: "connect", wallet: accounts[0], balance, networkId });
       } else {
@@ -88,7 +87,7 @@ export default function Navigation() {
               )}
               {
                 status === "wrongNetwork" &&
-                <SwitchNetwork {...{ textSize: 10, marginT: 0, marginR: 1, marginB: 0, marginL: 0 }} />
+                <SwitchNetwork {...{ textSize: 10, marginR: 1 }} />
               }
               {!!wallet && (
                 <Link

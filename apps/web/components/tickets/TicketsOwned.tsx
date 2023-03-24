@@ -26,8 +26,7 @@ type TicketFormatted = {
 
 const TicketsOwned = () => {
   const [ticketCollection, setTicketCollection] = useState<TicketFormatted[]>([]);
-  const { state: { wallet: address } } = useMetaMask();
-  const networkId = process.env.NEXT_PUBLIC_NETWORK_ID;
+  const { state: { wallet: address, networkId } } = useMetaMask();
 
   useEffect(() => {
     if (typeof window !== "undefined" && address !== null) {
@@ -80,12 +79,7 @@ const TicketsOwned = () => {
   return (
     <TicketsOwnedView>
       {isSupportedNetwork(networkId)
-        ? <>
-          {listOfTickets.length
-            ? <Grid columns={4} itemWidth={210} columnWidth={218}>{listOfTickets}</Grid>
-            : <span>No ETH Atlantis NFTs in this wallet</span>
-          }
-        </>
+        ? <Grid columns={4} itemWidth={210} columnWidth={218}>{listOfTickets}</Grid>
         : <SwitchNetwork {...{ textSize: 10, marginT: 1, marginR: 0, marginB: 0, marginL: 1 }} />
       }
     </TicketsOwnedView>

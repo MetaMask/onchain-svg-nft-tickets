@@ -19,6 +19,7 @@ type PageLoadedAction = {
   isMetaMaskInstalled: boolean;
   wallet: string | null;
   balance: string | null;
+  networkId: string | null;
 };
 type LoadingAction = { type: "loading" };
 type IdleAction = { type: "idle" };
@@ -55,8 +56,8 @@ const initialState: State = {
 function metamaskReducer(state: State, action: Action): State {
   switch (action.type) {
     case "connect": {
-      const { wallet, balance } = action;
-      const newState = { ...state, wallet, balance, status: "idle" } as State;
+      const { wallet, balance, networkId } = action;
+      const newState = { ...state, wallet, balance, status: "idle", networkId } as State;
       const info = JSON.stringify(newState);
       window.localStorage.setItem("metamaskState", info);
 
@@ -82,11 +83,11 @@ function metamaskReducer(state: State, action: Action): State {
       if (typeof window.ethereum !== undefined) {
         window.ethereum.removeAllListeners(["accountsChanged"]);
       }
-      return { ...state, wallet: null, balance: null };
+      return { ...state, wallet: null, balance: null, networkId: null };
     }
     case "pageLoaded": {
-      const { isMetaMaskInstalled, balance, wallet } = action;
-      return { ...state, isMetaMaskInstalled, status: "idle", wallet, balance };
+      const { isMetaMaskInstalled, balance, wallet, networkId } = action;
+      return { ...state, isMetaMaskInstalled, status: "idle", wallet, balance, networkId };
     }
     case "loading": {
       return { ...state, status: "loading" };
@@ -100,7 +101,9 @@ function metamaskReducer(state: State, action: Action): State {
         networkId === process.env.NEXT_PUBLIC_NETWORK_ID
           ? "idle"
           : "wrongNetwork";
-      return { ...state, status, networkId };
+      const newState = { ...state, status, networkId }
+      window.localStorage.setItem("metamaskState", JSON.stringify(newState));
+      return newState as State;
     }
     default: {
       throw new Error("Unhandled action type");

@@ -23,13 +23,13 @@ export const Layout: React.FC<PropsWithChildren> = ({ children }) => {
       }
 
       // local variable could be null if not present in LocalStorage
-      const { wallet, balance } = local
+      const { wallet, balance, networkId } = local
         ? JSON.parse(local)
         : // backup if local storage is empty
-          { wallet: null, balance: null };
+          { wallet: null, balance: null, networkId: null };
 
       instantiateSdk();
-      dispatch({ type: "pageLoaded", isMetaMaskInstalled, wallet, balance });
+      dispatch({ type: "pageLoaded", isMetaMaskInstalled, wallet, balance, networkId });
     }
   }, []);
 
