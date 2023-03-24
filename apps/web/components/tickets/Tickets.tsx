@@ -76,7 +76,7 @@ const TicketTypes: React.FC<Ticket> = ({
     <FlexItem>
       <TicketType>
         <TicketTypeText>{description}</TicketTypeText>
-        <p>{event}</p>
+        <p>{price} ETH</p>
         <Button disabled={cantMint} onClick={mintTicket}>
           <SiEthereum /> {isMinting ? 'Minting...' : 'Mint'} Ticket
         </Button>
