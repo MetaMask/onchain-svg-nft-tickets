@@ -1,16 +1,18 @@
 # MetaMask Onchain SVG NFT Tickets Workshop
 
-This workshop starts with a [React](https://beta.reactjs.org) / [NextJS](https://nextjs.org) mono repo setup and walks attendees through building out a Web3 dApp that utilizes some pretty great tools to get you started building in Web3.  
+This workshop starts with a [React](https://beta.reactjs.org) / [NextJS](https://nextjs.org) mono repo and walks attendees through building out a Web3 dApp that utilizes [MetaMask SDK](https://metamask.io/sdk), [Truffle](https://trufflesuite.com), and [Ganache](https://trufflesuite.com/ganache) and give you a very well rounded start to using our tools in conjunction with each other and start building in Web3.  
 
-A mono repo so that we can have separation of our **blockchain** and **web** projects respectfully. Smart contracts in one folder and our React frontend in another with the ability to have their own package dependencies but also be linked together.  
+## Decisions We Have Made
 
-We have chosen [Turbo](https://turbo.build) and incremental bundler/build system optimized for mono repos, JavaScript and TypeScript.
+We have gone with a mono repo so that we can have separation of our **blockchain** and **web** projects respectfully. Smart contracts in one directory and our React / NextJS frontend in another directory with the ability to have their own package dependencies, but all existing in the same workspace.  
 
-We use NextJS a popular React framework very popular for building web3 projects so that those with traditional web development experience will feel more at home with our setup.
+We have chosen [Turbo](https://turbo.build), an incremental bundler/build system optimized for JavaScript and TypeScript mono repos.
+
+We use NextJS a popular React framework very popular for building web3 projects so that those with traditional web development experience will feel more at home with our setup. NextJS is not a client only framework so it will always do an initial render on the server side. This is something that requires a slightly different approach when integrating MetaMask as it works by injecting on the window object. 
+
+Since NextJS can be a bit more complicated than a standard React application, we have chosen this route to try to bring as much value as possible. Also knowing that a lot of developers are starting to choose NextJS for Web2 and Web3 applications. In this workshop we create a `MetaMaskProvider` which is not standard or out of the box with MetaMask SDK and something you will surely run into building in Web3 with MetaMask. We thought it was very valuable to show off at least one approach on how to do this so that you can keep your wallet state in sync with your web dApp. WE achieve this globally inn our application utilizing React Context API.
 
 This workshop also utilizes [TypeScript](https://www.typescriptlang.org/docs/handbook/intro.html) and [TypeChain](https://github.com/dethcrypto/TypeChain) (TypeScript bindings for Ethereum smart contracts) to ensure that we can extend JavaScript and overall improve the developer experience. These choices enable developers to add type safety. Moreover, TypeScript itself provides various other features, like interfaces, type aliases, abstract classes, function overloading, tuple, generics, etc.  
-
-Finally, we use our suite of ConsenSys tools like [MetaMask SDK](https://metamask.io/sdk), [Truffle](https://trufflesuite.com), and [Ganache](https://trufflesuite.com/ganache) and give you a very well rounded start to using our tools in conjunction with each other.  
 
 We have purposefully made choices to reduce the number of overall dependencies outside of configuration for this type of project. We do some things like state management and deployment of contracts in a more manual fashion as to teach you the basics rather than lean on other platforms to do this for you. After taking this workshop yu should have a pretty solid understanding of what it takes to build and deploy a basic dApp to a testnet like Ethereum's Goerli or Polygon's Mumbai.
 
@@ -270,37 +272,6 @@ But first, we need to set up two React hooks to listen and provide context for o
 
 Create a new directory in the web app under `apps/web/hooks` and add the two following files.
 
-Create a file named `useListen.tsx` with the following code:
-
-```typescript
-import { useMetaMask } from "./useMetaMask";
-
-export const useListen = () => {
-  const { dispatch } = useMetaMask();
-
-  return () => {
-    window.ethereum.on("accountsChanged", async (newAccounts: string[]) => {
-      if (newAccounts.length > 0) {
-        // upon receiving a new wallet, we'll request again the balance to synchronize the UI.
-        const newBalance = await window.ethereum!.request({
-          method: "eth_getBalance",
-          params: [newAccounts[0], "latest"],
-        });
-
-        dispatch({
-          type: "connect",
-          wallet: newAccounts[0],
-          balance: newBalance,
-        });
-      } else {
-        // if the length is 0, then the user has disconnected from the wallet UI
-        dispatch({ type: "disconnect" });
-      }
-    });
-  };
-};
-```
-
 Create a file named `useMetaMask.tsx` with the following code:
 
 ```typescript
@@ -403,6 +374,41 @@ export { MetaMaskProvider, useMetaMask };
 ```
 
 These files respectively listen for changes in the user's connection to MetaMask and set up a context provider for sharing the wallet state to the components in our app.  
+
+We have used the traditional reducer pattern that handles all of our state for the MetaMask wallet that we need to keep in sync with our dApp. We have actions for connecting, disconnecting, pageLoad (so that we know when we have access to MetaMask or not), loading, idle, and networkSwitched. We also utilize local storage in order to simulate disconnecting from our dApp for UX purposes. Without a disconnect experience you may have to manually do that and refresh the page and we feel that presents a bad UX pattern.
+
+This brings us to our `useListen` hook that works in conjunction with our `useMetamask` or `MetaMaskProvider` provider. It checks for accounts, balances, or chains/networks that have changed in the wallet and dispatches the proper action in our reducer. Let's create that hook now.
+
+Create a file named `useListen.tsx` with the following code:
+
+```typescript
+import { useMetaMask } from "./useMetaMask";
+
+export const useListen = () => {
+  const { dispatch } = useMetaMask();
+
+  return () => {
+    window.ethereum.on("accountsChanged", async (newAccounts: string[]) => {
+      if (newAccounts.length > 0) {
+        // upon receiving a new wallet, we'll request again the balance to synchronize the UI.
+        const newBalance = await window.ethereum!.request({
+          method: "eth_getBalance",
+          params: [newAccounts[0], "latest"],
+        });
+
+        dispatch({
+          type: "connect",
+          wallet: newAccounts[0],
+          balance: newBalance,
+        });
+      } else {
+        // if the length is 0, then the user has disconnected from the wallet UI
+        dispatch({ type: "disconnect" });
+      }
+    });
+  };
+};
+```
 
 With those files in place, we'll wire up our connect and disconnect as well as display basic balance information from our connected user.  
 
