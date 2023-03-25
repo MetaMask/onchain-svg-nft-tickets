@@ -33,7 +33,7 @@ export const useSwitchNetwork = () => {
     dispatch({
       type: 'networkSwitched',
       networkId
-    })
+    });
   };
 
   return {
