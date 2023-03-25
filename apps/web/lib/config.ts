@@ -1,27 +1,26 @@
 export const config = {
   '0x539': {
     name: 'Localhost 9545',
-    contractAddress: "0x485950f7A14140F5561320229CdD7A2B26e39F9E",
+    contractAddress: "",
     symbol: "ETH",
     blockExplorer: null, // leave null for testing
     rpcUrl: `http://localhost:9545`
   },
   '0x5': {
     name: 'Goerli',
-    contractAddress: "0x485950f7A14140F5561320229CdD7A2B26e39F9E",
+    contractAddress: "0x5e5e386F82e6A1a3cd140395CB8E9D3974024dE3",
     symbol: "ETH",
-    blockExplorer: 'https://goerli.etherscan.io/',
-    rpcUrl: `https://goerli.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_PROJECT_ID}`
+    blockExplorer: 'https://goerli.etherscan.io',
+    rpcUrl: `https://goerli.blockpi.network/v1/rpc/public`
   },
   '0x13881': {
     name: 'Mumbai',
     contractAddress: "0x277Fb2217952Aa294a0f3BB37B7E024c2F836940",
     symbol: "MATIC",
-    blockExplorer: "https://mumbai.polygonscan.com/",
-    rpcUrl: "https://rpc-mumbai.maticvigil.com/"
+    blockExplorer: "https://mumbai.polygonscan.com",
+    rpcUrl: "https://rpc-mumbai.maticvigil.com"
   }
 };
-
 
 /**
  * It returns true if the id is a key of the config object
