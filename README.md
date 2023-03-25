@@ -1,3 +1,5 @@
+![](https://imgur.com/pM2qGfu.jpg)
+
 # MetaMask Onchain SVG NFT Tickets Workshop
 
 This workshop starts with a [React](https://beta.reactjs.org) / [NextJS](https://nextjs.org) mono repo and walks attendees through building out a Web3 dApp that utilizes [MetaMask SDK](https://metamask.io/sdk), [Truffle](https://trufflesuite.com), and [Ganache](https://trufflesuite.com/ganache) and give you a very well rounded start to using our tools in conjunction with each other and start building in Web3.  
