@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 /**
  * Use this file to configure your truffle project. It's seeded with some
  * common settings for different networks and features like migrations,
@@ -43,8 +45,7 @@
 
 // require("dotenv").config();
 // const { MNEMONIC, PROJECT_ID } = process.env;
-
-// const HDWalletProvider = require("@truffle/hdwallet-provider");
+const HDWalletProvider = require("@truffle/hdwallet-provider");
 
 module.exports = {
   /**
@@ -64,6 +65,24 @@ module.exports = {
     // tab if you use this network and you must also set the `host`, `port` and `network_id`
     // options below to some value.
     //
+    goerli: {
+      provider: function () {
+        return new HDWalletProvider({
+          privateKeys: [process.env.PRIVATE_KEY],
+          provider: `https://goerli.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
+        });
+      },
+      network_id: 5,
+    },
+    mumbai: {
+      provider: function () {
+        return new HDWalletProvider({
+          privateKeys: [process.env.PRIVATE_KEY],
+          provider: `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
+        });
+      },
+      network_id: 80001,
+    },
     development: {
       host: "127.0.0.1", // Localhost (default: none)
       port: 9545, // Standard Ethereum port (default: none)
