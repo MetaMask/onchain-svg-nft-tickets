@@ -49,4 +49,4 @@ export const Button = styled.button`
     color: #7697C8;
     cursor: not-allowed;
   }
-`
+`;

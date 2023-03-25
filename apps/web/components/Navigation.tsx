@@ -7,7 +7,7 @@ import { NavigationView, Balance, RightNav, Logo } from "./styledComponents/navi
 import { SiEthereum } from "react-icons/si";
 import SwitchNetwork from "./SwitchNetwork";
 
-export default function Navigation() {
+const Navigation = () => {
   const { dispatch, state: { status, isMetaMaskInstalled, wallet, balance } }
     = useMetaMask();
 
@@ -111,3 +111,5 @@ export default function Navigation() {
     </NavigationView>
   );
 }
+
+export default Navigation;

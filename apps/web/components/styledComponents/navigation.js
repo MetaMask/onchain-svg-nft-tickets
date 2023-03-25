@@ -16,12 +16,12 @@ export const Logo = styled.div`
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-`
+`;
 
 export const Balance = styled.div`
   display: inline-block;
   margin-left: 1em;
-`
+`;
 
 export const RightNav = styled.div`
   color: #ddd;
@@ -29,4 +29,4 @@ export const RightNav = styled.div`
   line-height: 36px;
   height: 36px;
   width: ${props => (props.widthPixel += "px") || "100%"};
-`
+`;

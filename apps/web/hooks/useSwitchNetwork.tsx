@@ -8,7 +8,7 @@ export const useSwitchNetwork = () => {
   
   if(!isSupportedNetwork(networkId)) {
     throw new Error('Unsupported network')
-  }
+  };
 
   const switchNetwork = async () => {
     await window.ethereum.request({
@@ -34,9 +34,9 @@ export const useSwitchNetwork = () => {
       type: 'networkSwitched',
       networkId
     })
-  }
+  };
 
   return {
     switchNetwork
-  }
+  };
 };
