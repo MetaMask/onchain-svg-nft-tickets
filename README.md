@@ -1,41 +1,71 @@
-# Web3 Dubai MetaMask Workshop (Follow Along)
+# MetaMask Onchain SVG NFT Tickets Workshop
+
+This workshop starts with a [React](https://beta.reactjs.org) / [NextJS](https://nextjs.org) mono repo and walks attendees through building out a Web3 dApp that utilizes [MetaMask SDK](https://metamask.io/sdk), [Truffle](https://trufflesuite.com), and [Ganache](https://trufflesuite.com/ganache) and give you a very well rounded start to using our tools in conjunction with each other and start building in Web3.  
+
+## Decisions We Have Made
+
+We have gone with a mono repo so that we can have separation of our **blockchain** and **web** projects respectfully. Smart contracts in one directory and our React / NextJS frontend in another directory with the ability to have their own package dependencies, but all existing in the same workspace.  
+
+We have chosen [Turbo](https://turbo.build), an incremental bundler/build system optimized for JavaScript and TypeScript mono repos.
+
+We use NextJS a popular React framework very popular for building web3 projects so that those with traditional web development experience will feel more at home with our setup. NextJS is not a client only framework so it will always do an initial render on the server side. This is something that requires a slightly different approach when integrating MetaMask as it works by injecting on the window object. 
+
+Since NextJS can be a bit more complicated than a standard React application, we have chosen this route to try to bring as much value as possible. Also knowing that a lot of developers are starting to choose NextJS for Web2 and Web3 applications. In this workshop we create a `MetaMaskProvider` which is not standard or out of the box with MetaMask SDK and something you will surely run into building in Web3 with MetaMask. We thought it was very valuable to show off at least one approach on how to do this so that you can keep your wallet state in sync with your web dApp. WE achieve this globally inn our application utilizing React Context API.
+
+This workshop also utilizes [TypeScript](https://www.typescriptlang.org/docs/handbook/intro.html) and [TypeChain](https://github.com/dethcrypto/TypeChain) (TypeScript bindings for Ethereum smart contracts) to ensure that we can extend JavaScript and overall improve the developer experience. These choices enable developers to add type safety. Moreover, TypeScript itself provides various other features, like interfaces, type aliases, abstract classes, function overloading, tuple, generics, etc.  
+
+We have purposefully made choices to reduce the number of overall dependencies outside of configuration for this type of project. We do some things like state management and deployment of contracts in a more manual fashion as to teach you the basics rather than lean on other platforms to do this for you. After taking this workshop yu should have a pretty solid understanding of what it takes to build and deploy a basic dApp to a testnet like Ethereum's Goerli or Polygon's Mumbai.
 
 ## Prerequisites:
 - NodeJS 18.1 & NPM 9.5.0
-- Code Editor
-- Git & GitHub account 
-- [MetaMask Extension](https://metamask.io/download) Installed
-- Knowledge of JavaScript, TypeScript, and React (is a plus)
-- Eagerness to learn NextJS and some Solidity
+- Code Editor + GitHub account
+- Truffle and Ganache installed
+- [MetaMask Extension](https://metamask.io/download) or [MetaMask Flask](https://metamask.io/flask/) Installed
+- 0.1 GoerliETH/MATIC (for testnets)
+  - Goerli Faucets
+    - https://goerlifaucet.com
+    - https://goerlifaucet.org
+    - https://goerli-faucet.mudit.blog
+    - https://faucet.quicknode.com/ethereum/goerli
+  - Mumbai Faucets
+    - https://faucet.polygon.technology
+    - https://mumbaifaucet.com
+  - Network Information
+    - https://chainlist.org/chain/5
+    - https://chainlist.org/chain/80001
+
+Before getting started ensure you are on NodeJS 18 and that you have Truffle and Ganache installed globally with NPM:
 
 ```bash
 npm i truffle ganache -g
 ```
 
-## Getting Started
+## Agenda
 
-Clone the workshop repo on your machine and checkout the `start` branch:
+### Build and Test locally
+
+We will start by building our project up from our starting point and running everything from a local instance of a test blockchain using Truffle and Ganache. This is just a recommended way of building and testing your frontend that does not require any test ETH or deployment to a testnet.
+
+### Deploy and Test using a Testnet
+
+Once we have our app working locally we will talk about how we can change our config and environment variables in order to deploy to a testnet, this will require having either MATIC on Polygon's Mumbai testnet or GoerliETH on Ethereum's Goerli Testnet. Links above should help you drip 💧 that test ETH to your wallet.  
+
+We suggest having about 0.1 testnet ETH or MATIC in order to deploy and test your application. IN theory you will not need all of that, but that's how much one person can easily get in one day for a workshop. If needed [Eric Bishard](https://twitter.com/httpjunkie) can send you some if you DM me.  
+
+If you plan on deploying to a testnet, visit the ChainList site for [Mumbai](https://chainlist.org/chain/80001) and [Goerli](https://chainlist.org/chain/5) and click connect wallet to ensure you have those networks setup in MetaMask
+
+## Getting Started 🎯
+
+Clone the workshop repo on your machine and install project dependencies:
 
 ```bash
 git clone https://github.com/MetaMask/onchain-svg-nft-tickets && 
-cd onchain-svg-nft-tickets && 
-git checkout start && npm i
+cd onchain-svg-nft-tickets && npm i
 ```
 
-With our repo cloned and dependencies installed, let's note the architecture:
+Since our github repo has a default branch `start` you will already be on the right branch. If needed you can switch to the `final` branch but remember that there are `.env` files which if they do not exist the project wil not run. THose files require an Infura account/key and your test wallets private key.  
 
-- A mono repo using [Turbo](https://turbo.build) 
-    - Incremental bundler/build system optimized for mono repos, JS & TS
-    - A bundler that is the successor to webpack written in Rust and fast
-    - Mission for Turbo pack is to support everything that `next dev` supports
-- Separating our `blockchain` and `web` projects
-- [React](https://beta.reactjs.org) & [NextJS](https://nextjs.org)
-- [Truffle](https://trufflesuite.com) & [Ganache](https://trufflesuite.com/ganache)
-
-We have a solid framework to build with. 
-
-If you're a web2 dev getting started with web3 these tools should feel familiar.
-The idea is to use NextJS, React and TS, and get you started with a solid full-stack web3 dApp all in one repo.
+**DO NOT USE YOUR REGULAR METAMASK WALLET FOR DEV/TESTING*
 
 ## Run Our NextJS Project
 
@@ -47,8 +77,9 @@ In a new terminal window run:
 cd apps/web && npm run dev
 ```
 
-If all is working, you should see the text: "Lets Build in Web3". 
-Exit out of `next dev`
+If all is working, you should see the text: **"Lets Build in Web3"**  
+
+Revert to the root and exit out of: `npm run dev`
 
 ```bash
 cd ../..
@@ -90,15 +121,37 @@ Run the following command:
 npm run local
 ```
 
-The output from this command will give us some private keys, and we can take one of those private keys and import it into our MetaMask using the following network information:
+The output from this command will give us some private keys, and we can take one of those private keys and import it into our MetaMask wallet.  
 
-- Network Name: Localhost 9545
-- New RPC URL: http://localhost:9545
-- Chain ID: 1337
-- Currency Symbol: ETH
+```
+Truffle Develop started at http://127.0.0.1:9545/
+
+blockchain:local: 
+blockchain:local: Accounts:
+blockchain:local: (0) 0xe8f3396ec6d6eb602707f5e0eec9813c619f9e21
+...
+blockchain:local: Private Keys:
+blockchain:local: (0) 2af620e8c3debd5f31f3205725ee337d493eea305c8e49688429391705346d10
+...
+```
+
+As well we will add a localhost network using the following network information:
+
+In MetaMask go to:  
+
+_Settings > Networks > Add Network > Add a network manually_
+
+- Network Name: `Localhost 9545`
+- New RPC URL: `http://localhost:9545`
+- Chain ID: `1337`
+- Currency Symbol: `ETH`
 - Block explorer URL: we can leave this blank
 
-For our Front-end we can open one more terminal window and run (from the root this time):
+Now we should see the account we imported and we will be on the Localhost 9545 network with 100 ETH for local testing. This test ETH only exists on our local network.
+
+![](https://i.imgur.com/RcWcStZ.jpg)
+
+For our Front-end we can open one more terminal window and run a root level command:
 
 ```bash
 npm run dev
@@ -107,53 +160,26 @@ npm run dev
 **Important**
 We need to pay attention to the output of this command, and anytime we rerun this command, we will need to get the `contract address` and copy it into the `apps/web/lib/config` file. Let's do that now...
 
-All of the work, from this point, will be done in our `apps/web` directory. All dependencies we will rely on have already been installed:
+```ts
+'0x539': {
+    name: 'Localhost 9545',
+    contractAddress: "0x485950f7A14140F5561320229CdD7A2B26e39F9E",
+    symbol: "ETH",
+    blockExplorer: null,
+    rpcUrl: `http://localhost:9545`
+  },
+```
+
+All of the work, from this point, will be done in our `apps/web` directory.
 
 ## Connecting Users to MetaMask
 
 Create a directory in `apps/web/components/` named `styledComponents`  
-> _for styling our components and styles we can reuse throughout our application_
-
-Create a file named `navigation.js` inside that `styledComponents` directory, and add code:
-
-```js
-import styled from 'styled-components';
-
-export const NavigationView = styled.div`
-  padding: 1em;
-  border-bottom: 1px solid #333;
-  background-color: #1D1E22;;
-  color: #FFF;
-`;
-
-export const Logo = styled.div`
-  display: block;
-  display: inline-block;
-  line-height: 36px;
-  height: 36px;
-  background: linear-gradient(to right, #30CFD0, #c43ad6);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-`
-
-export const Balance = styled.div`
-  display: inline-block;
-  margin-left: 1em;
-`
-
-export const RightNav = styled.div`
-  color: #ddd;
-  margin-left: auto;
-  line-height: 36px;
-  height: 36px;
-  width: ${props => (props.widthPixel += "px") || "100%"};
-`
-```
+> _We use [Styled Components](https://styled-components.com/docs/basics) for creating React Components that have styling injected..._
 
 Create: `general.js` inside the `styledComponents` directory with the following code:
 
-```js
+```ts
 import styled from 'styled-components';
 
 export const FlexContainer = styled.div`
@@ -174,11 +200,11 @@ export const Button = styled.button`
 
   box-shadow: 0 0 6px 0 rgba(157, 96, 212, 0.5);
   border: solid 1px transparent;
-  background-image: linear-gradient(to right, #30CFD0, #c43ad6);
+  background-image: linear-gradient(to right, #2bf9f9, #e757fa);
   background-origin: border-box;
   background-clip: content-box, border-box;
 
-  background: linear-gradient(to right, #30CFD0, #c43ad6);
+  background: linear-gradient(to right, #2bf9f9, #e757fa);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -188,7 +214,10 @@ export const Button = styled.button`
   text-transform: uppercase;
   padding: 1em 0.75em;
   display: inline-block;
-  margin: 0 1em 0 0;
+  margin-top: ${props => props.marginT | 0}em;
+  margin-right: ${props => props.marginR | 0}em;
+  margin-bottom: ${props => props.marginB | 0}em;
+  margin-left: ${props => props.marginL | 0}em;
   cursor: pointer;
   cursor: hand;
   user-select: none;
@@ -202,19 +231,56 @@ export const Button = styled.button`
     color: #7697C8;
     cursor: not-allowed;
   }
-`
+`;
+```
+
+Create: `navigation.js` inside the `styledComponents` directory with the following code:
+
+```ts
+import styled from 'styled-components';
+
+export const NavigationView = styled.div`
+  padding: 1em;
+  border-bottom: 1px solid #333;
+  background-color: #1D1E22;;
+  color: #FFF;
+`;
+
+export const Logo = styled.div`
+  display: block;
+  display: inline-block;
+  line-height: 36px;
+  height: 36px;
+  background: linear-gradient(to right, #2bf9f9, #e757fa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+`;
+
+export const Balance = styled.div`
+  display: inline-block;
+  margin-left: 1em;
+`;
+
+export const RightNav = styled.div`
+  color: #ddd;
+  margin-left: auto;
+  line-height: 36px;
+  height: 36px;
+  width: ${props => (props.widthPixel += "px") || "100%"};
+`;
 ```
 
 Add a `Navigation.tsx` file in the `apps/web/components` directory with the following code:
 
-```typescript
+```tsx
 import Link from "next/link";
 
 import { Button, FlexContainer, FlexItem, } from "./styledComponents/general";
 import { NavigationView, Balance, RightNav, Logo } from "./styledComponents/navigation";
 import { SiEthereum } from 'react-icons/si';
 
-export default function Navigation() {
+const Navigation = () => {
 
   return (
     <NavigationView>
@@ -233,11 +299,13 @@ export default function Navigation() {
     </NavigationView>
   );
 }
+
+export default Navigation;
 ```
 
 With our navigation in place, let's update our `pages/index.tsx` using the following code:
 
-```typescript
+```tsx
 import type { NextPage } from "next";
 import Head from 'next/head';
 
@@ -260,75 +328,60 @@ const Mint: NextPage = () => {
 export default Mint;
 ```
 
-This `imports` our `Navigation` and adds the component in the area we had reserved for it.
+We should see our navigation in the top right corner of our dApp. 
+We will need to replace the "MM CONNECT BUTTON" text, but first.
 
-We should see our navigation in the top right corner. We need to replace the text that says "MM CONNECT BUTTON".  
-But first, we need to set up two React hooks to listen and provide context for our connected user. 
+We'll up two [React Hooks](https://react.dev/reference/react) to listen for changes from our MetaMask wallet and keep them in sync with our React dApp.  
 
 Create a new directory in the web app under `apps/web/hooks` and add the two following files.
 
-Create a file named `useListen.tsx` with the following code:
-
-```typescript
-import { useMetaMask } from "./useMetaMask";
-
-export const useListen = () => {
-  const { dispatch } = useMetaMask();
-
-  return () => {
-    window.ethereum.on("accountsChanged", async (newAccounts: string[]) => {
-      if (newAccounts.length > 0) {
-        // upon receiving a new wallet, we'll request again the balance to synchronize the UI.
-        const newBalance = await window.ethereum!.request({
-          method: "eth_getBalance",
-          params: [newAccounts[0], "latest"],
-        });
-
-        dispatch({
-          type: "connect",
-          wallet: newAccounts[0],
-          balance: newBalance,
-        });
-      } else {
-        // if the length is 0, then the user has disconnected from the wallet UI
-        dispatch({ type: "disconnect" });
-      }
-    });
-  };
-};
-```
-
 Create a file named `useMetaMask.tsx` with the following code:
 
-```typescript
+```tsx
 import React, { type PropsWithChildren } from "react";
 
-type ConnectAction = { type: "connect"; wallet: string; balance: string };
+type ConnectAction = {
+  type: "connect";
+  wallet: string;
+  balance: string;
+  networkId: string;
+};
+type WrongNetworkAction = {
+  type: "wrongNetwork";
+  wallet: string;
+  balance?: string;
+  networkId?: string;
+};
+
 type DisconnectAction = { type: "disconnect" };
 type PageLoadedAction = {
   type: "pageLoaded";
   isMetaMaskInstalled: boolean;
   wallet: string | null;
   balance: string | null;
+  networkId: string | null;
 };
 type LoadingAction = { type: "loading" };
 type IdleAction = { type: "idle" };
-
+type NetworkSwitchedAction = { type: "networkSwitched"; networkId: string };
 type Action =
   | ConnectAction
   | DisconnectAction
   | PageLoadedAction
   | LoadingAction
-  | IdleAction;
+  | IdleAction
+  | WrongNetworkAction
+  | NetworkSwitchedAction;
 
 type Dispatch = (action: Action) => void;
 
-type Status = "loading" | "idle" | "pageNotLoaded";
+type Status = "loading" | "idle" | "pageNotLoaded" | "wrongNetwork";
 
 type State = {
   wallet: string | null;
   isMetaMaskInstalled: boolean;
   status: Status;
+  networkId: string | null;
   balance: string | null;
 };
 
@@ -337,16 +390,32 @@ const initialState: State = {
   isMetaMaskInstalled: false,
   status: "loading",
   balance: null,
+  networkId: null,
 } as const;
 
 function metamaskReducer(state: State, action: Action): State {
   switch (action.type) {
     case "connect": {
-      const { wallet, balance } = action;
-      const newState = { ...state, wallet, balance, status: "idle" } as State;
+      const { wallet, balance, networkId } = action;
+      const newState = { ...state, wallet, balance, status: "idle", networkId } as State;
       const info = JSON.stringify(newState);
       window.localStorage.setItem("metamaskState", info);
 
+      return newState;
+    }
+    case "wrongNetwork": {
+      const { wallet, balance, networkId } = action;
+
+      const newState = {
+        ...state,
+        wallet,
+        balance,
+        networkId,
+        status: "wrongNetwork",
+      } as State;
+
+      const info = JSON.stringify(newState);
+      window.localStorage.setItem("metamaskState", info);
       return newState;
     }
     case "disconnect": {
@@ -354,11 +423,11 @@ function metamaskReducer(state: State, action: Action): State {
       if (typeof window.ethereum !== undefined) {
         window.ethereum.removeAllListeners(["accountsChanged"]);
       }
-      return { ...state, wallet: null, balance: null };
+      return { ...state, wallet: null, balance: null, networkId: null };
     }
     case "pageLoaded": {
-      const { isMetaMaskInstalled, balance, wallet } = action;
-      return { ...state, isMetaMaskInstalled, status: "idle", wallet, balance };
+      const { isMetaMaskInstalled, balance, wallet, networkId } = action;
+      return { ...state, isMetaMaskInstalled, status: "idle", wallet, balance, networkId };
     }
     case "loading": {
       return { ...state, status: "loading" };
@@ -366,7 +435,16 @@ function metamaskReducer(state: State, action: Action): State {
     case "idle": {
       return { ...state, status: "idle" };
     }
-
+    case "networkSwitched": {
+      const { networkId } = action;
+      const status =
+        networkId === process.env.NEXT_PUBLIC_NETWORK_ID
+          ? "idle"
+          : "wrongNetwork";
+      const newState = { ...state, status, networkId }
+      window.localStorage.setItem("metamaskState", JSON.stringify(newState));
+      return newState as State;
+    }
     default: {
       throw new Error("Unhandled action type");
     }
@@ -399,26 +477,156 @@ function useMetaMask() {
 export { MetaMaskProvider, useMetaMask };
 ```
 
-These files respectively listen for changes in the user's connection to MetaMask and set up a context provider for sharing the wallet state to the components in our app.  
+We have used the traditional [reducer pattern](https://kentcdodds.com/blog/the-state-reducer-pattern-with-react-hooks) that handles all of our state for the MetaMask wallet. We have actions for `connect`, `disconnect`, `wrongNetwork`, `pageLoaded` (so that we know when we have access to MetaMask or not), `loading`, `idle`, and `networkSwitched`.  
 
-With those files in place, we'll wire up our connect and disconnect as well as display basic balance information from our connected user.  
+We utilize [local storage](https://blog.logrocket.com/using-localstorage-react-hooks/) in order to simulate disconnecting from our dApp for UX purposes. Without a disconnect, users will have to manually disconnect and the app is not aware and this leads to bad overall UX in a dApp.  
+
+This brings us to our `useListen` hook that works in conjunction with `useMetamask` which returns a [Context Provider](https://react.dev/reference/react/createContext). It updates our components automatically when accounts, balances, or chains/networks  have changed in our wallet by dispatching actions in our reducer. Let's create that hook now.
+
+Create a file named `useListen.tsx` in the `apps/web/hooks` directory with the following code:
+
+```tsx
+import { isSupportedNetwork } from "../lib/config";
+import { useMetaMask } from "./useMetaMask";
+
+export const useListen = () => {
+  const { dispatch } = useMetaMask();
+
+  return () => {
+    window.ethereum.on("chainChanged", (networkId: string) => {
+      dispatch({ type: "networkSwitched", networkId });
+    });
+    window.ethereum.on("accountsChanged", async (newAccounts: string[]) => {
+      if (newAccounts.length > 0) {
+        // upon receiving a new wallet, we'll request again the balance to synchronize the UI.
+        const newBalance = await window.ethereum!.request({
+          method: "eth_getBalance",
+          params: [newAccounts[0], "latest"],
+        });
+
+        const networkId = await window.ethereum!.request({
+          method: "eth_chainId",
+        });
+
+        if (isSupportedNetwork(networkId)) {
+          dispatch({
+            type: "connect",
+            wallet: newAccounts[0],
+            balance: newBalance,
+            networkId,
+          });
+        } else {
+          dispatch({
+            type: "wrongNetwork",
+            wallet: newAccounts[0],
+            balance: newBalance,
+            networkId,
+          });
+        }
+      } else {
+        // if the length is 0, then the user has disconnected from the wallet UI
+        dispatch({ type: "disconnect" });
+      }
+    });
+  };
+};
+```
+
+With those files in place, we'll wire up our connect and disconnect as well as display basic balance information.  
+
+Before we wire up our buttons in our navigation, we need two more files, another hook that will switch the network in the case the user is not connected to our network/chainId of choice. As well we need to create a component that we can use anywhere in our app to prompt the user to switch the network when we have detected that they are on the wrong network.
+
+Create a file named `useSwitchNetwork.tsx` in the `apps/web/hooks` directory with the following code:
+
+```tsx
+import { config, isSupportedNetwork } from "../lib/config";
+import { useMetaMask } from "./useMetaMask";
+
+
+export const useSwitchNetwork = () => {
+  const { dispatch } = useMetaMask();
+  const networkId = process.env.NEXT_PUBLIC_NETWORK_ID;
+  
+  if(!isSupportedNetwork(networkId)) {
+    throw new Error('Unsupported network')
+  };
+
+  const switchNetwork = async () => {
+    await window.ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [
+        {
+          chainId: networkId,
+          ...(config[networkId].blockExplorer ? {
+            blockExplorerUrls: [config[networkId].blockExplorer]
+          } : {}),
+          chainName: config[networkId].name,
+          nativeCurrency: {
+            decimals: 18,
+            name: config[networkId].name,
+            symbol: config[networkId].symbol,
+          },
+          rpcUrls: [config[networkId].rpcUrl],
+        },
+      ],
+    });
+  
+    dispatch({
+      type: 'networkSwitched',
+      networkId
+    });
+  };
+
+  return {
+    switchNetwork
+  };
+};
+```
+
+Create a file named `SwitchNetwork.tsx` in the `apps/web/components` directory with the following code:
+
+```tsx
+import { Button } from "./styledComponents/general";
+import { useSwitchNetwork } from "../hooks/useSwitchNetwork";
+
+interface ButtonProps {
+  textSize?: number;
+  marginT?: number;
+  marginR?: number;
+  marginB?: number;
+  marginL?: number;
+}
+
+const SwitchNetwork: React.FC<ButtonProps> = ({
+  textSize=10, marginT=0, marginR=0, marginB=0, marginL=0
+}) => {
+  const { switchNetwork } = useSwitchNetwork();
+  return (
+    <Button {... { textSize, marginT, marginR, marginB, marginL }} onClick={switchNetwork}>
+      Switch Chain
+    </Button>
+  );
+};
+
+export default SwitchNetwork;
+```
 
 Let's go back to our `Navigation.tsx` file, and replace with the following code:
 
-```typescript
+```tsx
 import Link from "next/link";
 import { useListen } from "../hooks/useListen";
 import { useMetaMask } from "../hooks/useMetaMask";
 
-import { Button, FlexContainer, FlexItem, } from "./styledComponents/general";
+import { Button, FlexContainer, FlexItem } from "./styledComponents/general";
 import { NavigationView, Balance, RightNav, Logo } from "./styledComponents/navigation";
-import { SiEthereum } from 'react-icons/si';
+import { SiEthereum } from "react-icons/si";
+import SwitchNetwork from "./SwitchNetwork";
 
-export default function Navigation() {
-  const {
-    dispatch,
-    state: { status, isMetaMaskInstalled, wallet, balance },
-  } = useMetaMask();
+const Navigation = () => {
+  const { dispatch, state: { status, isMetaMaskInstalled, wallet, balance } }
+    = useMetaMask();
+
   const listen = useListen();
 
   const showInstallMetaMask =
@@ -439,9 +647,22 @@ export default function Navigation() {
         method: "eth_getBalance",
         params: [accounts[0], "latest"],
       });
-      dispatch({ type: "connect", wallet: accounts[0], balance });
 
-      // we can register an event listener for changes to the user's wallet
+      const networkId = await window.ethereum!.request({
+        method: "eth_chainId",
+      });
+
+      if (networkId === process.env.NEXT_PUBLIC_NETWORK_ID) {
+        dispatch({ type: "connect", wallet: accounts[0], balance, networkId });
+      } else {
+        dispatch({
+          type: "wrongNetwork",
+          wallet: accounts[0],
+          balance,
+          networkId,
+        });
+      }
+      // register event listener for metamask wallet changes
       listen();
     }
   };
@@ -451,8 +672,8 @@ export default function Navigation() {
   };
 
   const formatAddress = (addr: string) => {
-    return `${addr.substr(0, 6)}...${addr.substr(-4)}`
-  }
+    return `${addr.substring(0, 5)}...${addr.substring(39)}`;
+  };
 
   return (
     <NavigationView>
@@ -465,42 +686,56 @@ export default function Navigation() {
         <FlexItem widthPercent={50}>
           <RightNav widthPixel={wallet && balance ? 300 : 119}>
             {showConnectButton && (
-              <Button textSize={10} onClick={handleConnect}>
+              <Button textSize={10} marginR={1} onClick={handleConnect}>
                 {status === "loading" ? "loading..." : "Connect Wallet"}
               </Button>
             )}
             {showInstallMetaMask && (
-              <Link href="https://metamask.io/" target="_blank">
+              <Link href="https://metamask.io" target="_blank">
                 Install MetaMask
               </Link>
             )}
-            {wallet && balance && (
-              <>
-                {isConnected && <Button textSize={10} onClick={handleDisconnect}>Disconnect</Button>}
-                <a
+            <>
+              {isConnected && status !== 'wrongNetwork' && (
+                <Button textSize={10} marginR={1} onClick={handleDisconnect}>
+                  Disconnect
+                </Button>
+              )}
+              {
+                status === "wrongNetwork" &&
+                <SwitchNetwork {...{ textSize: 10, marginR: 1 }} />
+              }
+              {!!wallet && (
+                <Link
                   className="text_link tooltip-bottom"
-                  href={`https://etherscan.io/address/${wallet}`} target="_blank"
-                  data-tooltip="Open in Etherscan"
+                  href={`https://etherscan.io/address/${wallet}`}
+                  target="_blank"
+                  data-tooltip="Open in Block Explorer"
                 >
                   {formatAddress(wallet)}
-                </a>
+                </Link>
+              )}
+              {!!balance && (
                 <Balance>
-                  {(parseInt(balance) / 1000000000000000000).toFixed(2)}{" "}ETH
+                  {(parseInt(balance) / 1000000000000000000).toFixed(2)} ETH
                 </Balance>
-              </>
-            )}
+              )}
+            </>
           </RightNav>
         </FlexItem>
       </FlexContainer>
     </NavigationView>
   );
 }
+
+export default Navigation;
 ```
 
-At this point, we would still get an error if we run the frontend, because we have not wrapped the app with a provider.
-let's go to the `apps/web/pages/_app.tsx` and replace it with the following code:
+At this point, we would still get an error if we run the frontend, because we have not wrapped the app with a provider.  
 
-```typescript
+Let's go to the `apps/web/pages/_app.tsx` and replace it with the following code:
+
+```tsx
 import 'normalize.css'
 import '../styles/globals.scss'
 
@@ -521,11 +756,11 @@ function MyApp({ Component, pageProps }: AppProps) {
 export default MyApp;
 ```
 
-We need to make two more changes, one to our `apps/web/components/Layout.tsx` as this code will determine `isMetaMaskInstalled` if the Ethereum provider exists or if it is `undefined` and dispatch the proper actions to our context's reducers. 
+We need to make a change to our `apps/web/components/Layout.tsx` as this code will determine `isMetaMaskInstalled` if the Ethereum provider exists or if it is `undefined` and dispatch the proper actions to our context's reducers. 
 
 In the `Layout.tsx` file update the code to the following: 
 
-```typescript
+```tsx
 import { PropsWithChildren, useEffect } from "react";
 import { useListen } from "../hooks/useListen";
 import { useMetaMask } from "../hooks/useMetaMask";
@@ -537,28 +772,27 @@ export const Layout: React.FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     if (typeof window !== undefined) {
-      // start by checking if window.ethereum is present, indicating a wallet extension
+      // is window.ethereum is present? indicating a wallet extension
       const ethereumProviderInjected = typeof window.ethereum !== "undefined";
-      // this could be other wallets so we can verify if we are dealing with metamask
-      // using the boolean constructor to be explicit and not let this be used as a falsy value (optional)
+      // Ensure it is MetaMask
       const isMetaMaskInstalled =
         ethereumProviderInjected && Boolean(window.ethereum.isMetaMask);
 
       const local = window.localStorage.getItem("metamaskState");
 
-      // if user was previously connected, start listening to MM
+      // if user was previously connected, start listening to MetaMask wallet changes
       if (local) {
         listen();
       }
 
-      // local could be null if not present in LocalStorage
-      const { wallet, balance } = local
+      // local variable could be null if not present in LocalStorage
+      const { wallet, balance, networkId } = local
         ? JSON.parse(local)
         : // backup if local storage is empty
-          { wallet: null, balance: null };
+          { wallet: null, balance: null, networkId: null };
 
       instantiateSdk();
-      dispatch({ type: "pageLoaded", isMetaMaskInstalled, wallet, balance });
+      dispatch({ type: "pageLoaded", isMetaMaskInstalled, wallet, balance, networkId });
     }
   }, []);
 
@@ -570,17 +804,17 @@ export const Layout: React.FC<PropsWithChildren> = ({ children }) => {
 };
 ```
 
-Finally, we need to add a new file to the `apps/web/lib` directory called `MetaMaskSdk.ts`.
+Finally, we need to add a new file to the `apps/web/lib` directory called `MetaMaskSdk.tsx`.
 
 Once you have created that file, add the following code:
 
-```typescript
+```tsx
 import MetaMaskSDK from "@metamask/sdk";
 
 export const instantiateSdk = () => {
   if (typeof window === undefined) {
     return null;
-  }
+  };
 
   new MetaMaskSDK();
 };
@@ -588,22 +822,37 @@ export const instantiateSdk = () => {
 
 This will solve our warnings in our editor that we previously saw for `window` being undefined.
 
-Now our connect, display, and disconnect functionality should work. 
+Now our connect, display, wrongNetwork, and disconnect functionality should work.  
 
-Let's test our dApp. We should now get the option to install if we don't have the MetaMask extension, connect if we do, display balance if we are connected, and disconnect if we wish.
+We need to rename our `apps/web/.env.example` file to `.env` and ensure we have the correct network set:
+
+```bash
+#  Use hexadecimal network id '0x539' for localhost, `0x5` for goerli or `0x13881` for mumbai
+NEXT_PUBLIC_NETWORK_ID=0x539
+# grab from infura dashboard TODO: Delete
+NEXT_PUBLIC_INFURA_PROJECT_ID=
+```
+
+Let's test our dApp. We should now get the option to install if we don't have the MetaMask extension, otherwise we can connect to our imported account and we will see a display of balance and be able to connect and simulate disconnect from the UI.
+
+![](https://imgur.com/61L0S9n.jpg)
 
 ## Add Tickets and Minting
 
-Since our app is based on showing the type of tickets available and allowing the user to mint those tickets, we will be adding components directly to the `apps/web/pages/index.ts` page.
+Since our app is based on showing the type of NFT tickets available and allowing the user to mint them, we need to add those components directly to the `apps/web/pages/index.ts` page.
 
-First, add an array of objects that represent the types of tickets we want to allow users to mint (GA vs VIP), Event Name, and Price in ETH using both the basic and hex version of this price. 
+We need an array of objects that represent the types of tickets we have to mint (GA & VIP), Event Name, and Price in ETH using both the basic and hex version of this price. 
 
 _* Why both? We want to display the value as well have the hex value to send to our contract._
 
-On the `index.tx` page import the `ethers` library (for interacting with Ethereum) and `Tickets` Component just above the `Navigation` import:
+On the `index.tx` we need to update our imports as following:
 
-```typescript
+```tsx
+import type { NextPage } from "next";
+import Head from 'next/head';
+
 import { ethers } from "ethers";
+import { useMetaMask } from "../hooks/useMetaMask";
 
 import Tickets from "../components/tickets/Tickets";
 import Navigation from '../components/Navigation';
@@ -611,7 +860,8 @@ import Navigation from '../components/Navigation';
 
 Next, just under the Mint component declaration add the following code:
 
-```typescript
+```tsx
+  const { state: { networkId } } = useMetaMask();
   // Get ETH as a small number ("0.01" => "10000000000000000")
   const bigNumberify = (amt: string) => ethers.utils.parseEther(amt);
 
@@ -639,13 +889,13 @@ Next, just under the Mint component declaration add the following code:
 
 Finally, we will add the actual `<Ticket/>` component and pass this `tickets` array to it, just underneath the `<Navigation/>` component, add the following code: 
 
-```typescript
+```tsx
       <Tickets tickets={tickets} />
 ```
 
 Now we will create a directory named `tickets` inside `apps/web/components` and add a file named `Tickets.tsx` with the following code:
 
-```typescript
+```tsx
 import { useState } from "react";
 
 import { SiEthereum } from 'react-icons/si';
@@ -665,7 +915,7 @@ interface TicketsProps {
 }
 
 const TicketTypes: React.FC<Ticket> = ({
-  type, event, description, price, priceHexValue,
+  type, event, description, price, priceHexValue
 }) => {
 
   const [isMinting, setIsMinting] = useState(false);
@@ -714,11 +964,15 @@ With this in place, we need to add the styled components for the `Tickets` page.
 
 In the `apps/web/components/styledComponents` directory, create a page called `tickets.js` and add the following code:
 
-```js
+```ts
 import styled from 'styled-components';
 
 export const TicketsView = styled.div`
-  padding: 1em;
+  padding-top: 0em;
+  padding-right: 1em;
+  padding-bottom: 1em;
+  padding-left: 1em;
+  border-bottom: 1px solid #333;
 `;
 
 export const TicketType = styled.div`
@@ -735,25 +989,25 @@ export const TicketType = styled.div`
 
 export const HeadingText = styled.h1`
   color: #ccc;
-`
+`;
 
 export const TicketTypeText = styled.h2`
   color: #93cae5;
-`
+`;
 
 export const StyledAlert = styled.div`
-  border-radius: 5px;
+  border-radius: 6px;
   padding: 0.5em;
   font-size: 10px;
   height: 40px;
   width: 100%;
   word-break: break-word;
   margin: 0.5em 0;
-  background-color: #244982;
+  background-color: #000;
   strong {
     color: #E2761B;
   }
-`
+`;
 ```
 
 With all of this in place, if we run our dApp we should see our ticket types with minting buttons (even though they do not work yet).
@@ -762,17 +1016,17 @@ With all of this in place, if we run our dApp we should see our ticket types wit
 
 We need to add some additional code to our `Tickets.tsx` page, allowing us to interact with our smart contract.
 
-When we are done with this next section, we should be able to call our contract's `mintNFT` function and determine if our minting function works.
+When we are done with this next section, we should be able to call our contract's `mintNFT` function and minting an NFT ticket.
 
-In the `Tickets.tsx` page, we need to add a few imports, lets replace them:
+In the `Tickets.tsx` page, we need to replace the existing imports with the following:
 
-```typescript
+```tsx
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { useMetaMask } from "../../hooks/useMetaMask";
 import { ETHTickets__factory } from "blockchain";
 import { ethers } from "ethers";
-import { config } from "../../lib/config";
+import { config, isSupportedNetwork } from "../../lib/config";
 
 import { SiEthereum } from 'react-icons/si';
 
@@ -780,13 +1034,13 @@ import { Button, FlexContainer, FlexItem, } from "../styledComponents/general";
 import { HeadingText, TicketsView, TicketType, TicketTypeText, StyledAlert } from "../styledComponents/tickets";
 ```
 
-These imports will give us access to our connected wallet state, the NextJS router so the we can force a page refresh (only after a successful mint), access to our smart contract through the `ETHTickets__factory` created by our build which utilizes typechain, the ethers library to get provider and signer for interacting with the blockchain via our contracts methods and the config file that knows the contract address.
+These imports will give us access to our connected wallet state, the NextJS router so the we can force a page refresh (only after a successful mint), access to our smart contract through the `ETHTickets__factory` created earlier by our build command which utilizes typechain, an ethers library to get provider and signer for interacting with the blockchain from our contract methods and the config file which also has access to our `isSupportedNetwork` boolean.
 
-Next, we need to destructure our wallet state returned by a call to the `useMetaMask()` hook, as well define a router with a call to the NextJS `useRouter()` hook
+Next, we need to destructure our wallet state returned by a call to the `useMetaMask()` hook, as well define a router with a call to the NextJS `useRouter()` hook.
 
 Starting on line 28 of the `Tickets.tsx` file inside our `TicketsType` component update that code with the following:
 
-```typescript
+```tsx
   const { state: { wallet }, } = useMetaMask();
   const router = useRouter();
   const [isMinting, setIsMinting] = useState(false);
@@ -794,12 +1048,12 @@ Starting on line 28 of the `Tickets.tsx` file inside our `TicketsType` component
   const [errorMessage, setErrorMessage] = useState("");
 ```
 
-We need to add a function called `mintTicket()`
+We need to add a function called `mintTicket()`.
 
 Directly below the code just added and just above the return statement in the `TicketsType` component, add the following code:
 
-```typescript
-const mintTicket = async () => {
+```tsx
+  const mintTicket = async () => {
     setIsMinting(true);
 
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -810,7 +1064,13 @@ const mintTicket = async () => {
     const signer = provider.getSigner();
 
     const factory = new ETHTickets__factory(signer);
-    const nftTickets = factory.attach(config.contractAddress);
+    const networkId = process.env.NEXT_PUBLIC_NETWORK_ID
+
+    if(!isSupportedNetwork(networkId)) {
+      throw new Error('Set either `0x5` for goerli or `0x13881` for mumbai in apps/web/.env or .env.local')
+    }
+    
+    const nftTickets = factory.attach(config[networkId].contractAddress);
 
     nftTickets
       .mintNFT({
@@ -822,7 +1082,7 @@ const mintTicket = async () => {
         await tx.wait(1);
         console.log(`Minting complete, mined: ${tx}`);
         setIsMinting(false);
-        router.reload()
+        router.reload();
       })
       .catch((error: any) => {
         console.log(error);
@@ -832,20 +1092,20 @@ const mintTicket = async () => {
       })
   };
 
-  const cantMint = !Boolean(wallet) && !isMinting
+  const cantMint = !Boolean(wallet) && !isMinting;
 ```
 
 This creates an async call on our `nftTickets` factory calling the `mintNFT` function and then either runs the `then` async function or catches the error. If we have a success, the `then` function will log the transaction after awaiting it, and then `setIsMinting` to false using a setter of our React state.
 
 Finally, we will update the button inside the `TicketsType` component's JSX and add a call to the `mintTicket()` function:
 
-```typescript
+```tsx
         <Button disabled={cantMint} onClick={mintTicket}>
           <SiEthereum /> {isMinting ? 'Minting...' : 'Mint'} Ticket
         </Button>
 ```
 
-At this point, if we are connected to the dApp with a MetaMask wallet that has some ETH in it, we can test those buttons out. Ensure you have your developer tools in your browser is open to the console so we can see those logs once we mint. (comment out the `router.reload()` statement to ensure we can see the console messages and uncomment once we are sure it is working).
+At this point, if we are connected to the dApp with our imported account, we can test our minting. Ensure you have your developer tools in your browser is open to the console so we can see those logs once we mint. (comment out the `router.reload()` statement to ensure we can see the console messages and uncomment once we are sure it is working).
 
 We should see:
 ```bash
@@ -861,11 +1121,13 @@ First we need to add the styles we will need to display our minted NFTs in a gri
 
 Create a new file in the `apps/web/components/styledComponents` directory named `ticketsOwned.js` and add the following code:
 
-```js
+```ts
 import styled from "styled-components";
 
-export const GridContainer = styled.div`
-  padding: 0.5em;
+export const TicketsOwnedView = styled.div`
+  padding: 1em;
+  border-top: 1px solid #333;
+  color: #999;
 `;
 
 export const Grid = styled.div`
@@ -888,16 +1150,17 @@ This code that we add will be everything we need in order to fetch and display o
 
 In `TicketsOwned.tsx`, add the following code:
 
-```typescript
+```tsx
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import Image from "next/image";
 
 import { ETHTickets__factory } from "blockchain";
-import { config } from "../../lib/config";
+import { config, isSupportedNetwork } from "../../lib/config";
 import { useMetaMask } from "../../hooks/useMetaMask";
+import SwitchNetwork from "../SwitchNetwork";
 
-import { GridContainer, Grid, SvgItem } from "../styledComponents/ticketsOwned";
+import { TicketsOwnedView, Grid, SvgItem } from "../styledComponents/ticketsOwned";
 
 type NftData = {
   name: string,
@@ -916,7 +1179,7 @@ type TicketFormatted = {
 
 const TicketsOwned = () => {
   const [ticketCollection, setTicketCollection] = useState<TicketFormatted[]>([]);
-  const { state: { wallet: address }, } = useMetaMask();
+  const { state: { wallet: address, networkId } } = useMetaMask();
 
   useEffect(() => {
     if (typeof window !== "undefined" && address !== null) {
@@ -924,8 +1187,12 @@ const TicketsOwned = () => {
       const signer = provider.getSigner();
 
       const factory = new ETHTickets__factory(signer);
-      const nftTickets = factory.attach(config.contractAddress);
 
+      if (!isSupportedNetwork(networkId)) {
+        return;
+      }
+
+      const nftTickets = factory.attach(config[networkId].contractAddress);
       const ticketsRetrieved: TicketFormatted[] = [];
 
       nftTickets.walletOfOwner(address).then((ownedTickets) => {
@@ -949,13 +1216,13 @@ const TicketsOwned = () => {
         Promise.all(promises).then(() => setTicketCollection(ticketsRetrieved));
       });
     }
-  }, [address]);
+  }, [address, networkId]);
 
   let listOfTickets = ticketCollection.map((ticket) => (
     <SvgItem pad={4} key={`ticket${ticket.tokenId}`}>
       <Image
-        width={300}
-        height={300}
+        width={200}
+        height={200}
         src={ticket.svgImage}
         alt={`Ticket# ${ticket.tokenId}`}
       />
@@ -963,29 +1230,135 @@ const TicketsOwned = () => {
   ));
 
   return (
-    <GridContainer>
-      <Grid columns={3} itemWidth={300} columnWidth={308}>{listOfTickets}</Grid>
-    </GridContainer>
+    <TicketsOwnedView>
+      {isSupportedNetwork(networkId)
+        ? <Grid columns={4} itemWidth={210} columnWidth={218}>{listOfTickets}</Grid>
+        : <SwitchNetwork {...{ textSize: 10, marginT: 1, marginR: 0, marginB: 0, marginL: 1 }} />
+      }
+    </TicketsOwnedView>
   );
 };
 
 export default TicketsOwned;
 ```
 
-At this point, each time you mint a new ticket, you should see them displayed as SVG at the bottom of the screen in a grid format. These are the exact NFTs your users will be minting and we are getting the SVG images directly from the deployed smart contract using the `generateNftSvgByTokenId()` method in our contract which takes a tokenId and builds and returns the SVG just as it is stored onchain.
+At this point, each time you mint a new ticket, you should see them displayed as an SVG at the bottom of the screen in a grid format. These are the exact NFTs your users will be minting and we are getting the SVG images directly from the deployed smart contract using the `generateNftSvgByTokenId()` method in our contract which takes a tokenId and builds and returns the SVG just as it is stored onchain.
 
-This concludes the instructional portion of the workshop, we would love you to continue working on this project and adding your own features, iterating on the UI, adding better error handling, create tests and even deploy to a testnet. The MetaMask DevRel team and Eric Bishard at [@httpJunkie](https://twitter.com/httpjunkie) can be contacted on Twitter or Telegram.
+After minting a few tickets our application should look like the following:
 
-## Taking The Project to the Next Level
+![](https://imgur.com/xl7pMPg.jpg)
 
-If you'd like to iterate on your smart contracts, we recommend interacting with and testing them via the development console. The [Truffle Quickstart ](https://trufflesuite.com/docs/truffle/quickstart) gives an overview of standard actions you might take when developing smart contracts.
+This concludes the building of our application and at this point we feel like we have an app that could be tested on a real testnet. We always will want deploy to a testnet and completely understand any issues our dApp has before going to mainnet. Since deploying to mainnet costs real ETH, we want to potentially find any issues on our testnet.
 
-If you want to interact with mainnet contracts locally, we recommend setting up a separate ganache instance to fork mainnet locally https://github.com/trufflesuite/ganache#readme
+Let's exit out of our terminal windows as deploying will be a different set of commands. Let's also delete our `apps/blockchain/build` directory and all of its artifacts to ensure we are doing everything fresh.
 
-Once you're ready to deploy your contracts to a testnet or live to mainnet, you can do so with your MetaMask wallet and [Truffle Dashboard](https://trufflesuite.com/docs/truffle/how-to/use-the-truffle-dashboard)
+## Deploying to a Testnet
 
-To configure Truffle Dashboard in any project just run:
+In order to deploy to a testnet I am using an Infura account. TO do this, set up a free account on Infura, find the "Create New API Key" button and choose "Web3 API" and give it a name.
+
+![](https://imgur.com/vnqYWXz.jpg)
+
+Once you have this created you will have an api key that we need to add to both of our `.env` files in our `apps/blockchain` and `apps/web` directories.
+
+Rename those files if not already from `.env.example` to `.env`.  
+
+In our `apps/web/.env` file we can update the file to include that Infura API key and we need to change the `NEXT_PUBLIC_INFURA_PROJECT_ID`. We will be deploying to Polygon Mumbai Testnet, so we will use the value `0x13881`.
+
+Your `.env` file should look like this:
+
+```ts
+NEXT_PUBLIC_NETWORK_ID=0x13881
+NEXT_PUBLIC_INFURA_PROJECT_ID=my_infura_api_key
+```
+
+In our `apps/blockchain/.env` file we can update the file to include that Infura API key for `INFURA_PROJECT_ID`. 
+
+We also need to have a MetaMask account with test MATIC on the Polygon Mumbai network. Inside MetaMask, switch to the account and there are three dots to the right of the account address.
+
+Click on "Account Details" and then "Export Private Key". Once you have copied that key (ensure that this is not an account that you use IRL, only for testing) We want to use that for the `PRIVATE_KEY` value.
+
+Your `.env` file should look like:
+
+```ts
+INFURA_PROJECT_ID=my_infura_api_key
+PRIVATE_KEY=my_private_key
+```
+
+Remember that your private keys should always be secure and you should never push these `.env` files to GitHub or share your private key or secret recovery phrase with anyone. Losing these keys or phrase will result in total loss of ownership to your wallet or account.
+
+### Designating a Deployment Chain
+
+The `NEXT_PUBLIC_NETWORK_ID=0x13881` refers to the Mumbai Network that we have in our `apps/web/lib/config.ts` file.
+
+```ts
+  '0x13881': {
+    name: 'Mumbai',
+    contractAddress: "",
+    symbol: "MATIC",
+    blockExplorer: "https://mumbai.polygonscan.com",
+    rpcUrl: "https://rpc-mumbai.maticvigil.com"
+  }
+```
+
+Notice that the `contractAddress` is blank. We need to deploy our contract and get that address to plug it into this file.
+
+Open a terminal and from the root of our project we are going to run the deploy command for Mumbai testnet.
 
 ```bash
-truffle dashboard
+npm run deploy:mumbai --workspace blockchain
 ```
+
+We only want to run this one time, as it will cost the wallet that we designated with the private key in order to deploy our contract.
+
+YOu will get an output like:
+
+```bash
+   Deploying 'ETHTickets'
+   ----------------------
+   > transaction hash:    0x21faea4ca99d0acf0df42f16826814fc468d195cd949b6ae4a859c767482fa98
+   > Blocks: 3            Seconds: 8
+   > contract address:    0x2946A6D0426b906acB09365ba1e69B39F1D9c65C
+   ...
+   -------------------------------------
+   > Total cost:     0.013257367579544205 ETH
+
+Summary
+=======
+> Total deployments:   1
+```
+
+We want to look at the output and copy the `contract address` and paste that into our `config.ts` file:
+
+```ts
+  '0x13881': {
+    name: 'Mumbai',
+    contractAddress: "0x2946A6D0426b906acB09365ba1e69B39F1D9c65C",
+    symbol: "MATIC",
+    blockExplorer: "https://mumbai.polygonscan.com",
+    rpcUrl: "https://rpc-mumbai.maticvigil.com"
+  }
+```
+
+Where the contract addresses match.
+
+Our contract is deployed, bow we just need to run another command to test our dApp, this time running against our deployed contract. Understand that when you mint any NFTs from our dApp now, it will cost you real test ETH or MATIC.
+
+```bash
+npm run dev:testnet
+```
+
+This command knows what testnet we are targeting and will build our dApp accordingly so that we are targeting that chain/network and our contract deployed there.
+
+Ensure that any imported accounts are not connected, here you can see I am using my test account on the Mumbai network:
+
+![](https://imgur.com/dwnN16q.jpg)
+
+After minting a few NFTS, you can see I know have an updated balance:
+
+![](https://imgur.com/GLpzpVq.jpg)
+
+This concludes our workshop, you could try deploying to Goerli with the same exact steps, or you could add more chains/networks to your config file and try deploying to a different network. You have the knowledge and capability with this dApp to do that~!
+
+## Thank You for Participating
+
+The MetaMask DevRel team and Eric Bishard at [@httpJunkie](https://twitter.com/httpjunkie) can be contacted on Twitter or Telegram.
