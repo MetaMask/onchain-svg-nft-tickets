@@ -22,11 +22,11 @@ export const TicketType = styled.div`
 
 export const HeadingText = styled.h1`
   color: #ccc;
-`
+`;
 
 export const TicketTypeText = styled.h2`
   color: #93cae5;
-`
+`;
 
 export const StyledAlert = styled.div`
   border-radius: 6px;
@@ -40,4 +40,4 @@ export const StyledAlert = styled.div`
   strong {
     color: #E2761B;
   }
-`
+`;

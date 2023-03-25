@@ -60,7 +60,7 @@ const TicketTypes: React.FC<Ticket> = ({
         await tx.wait(1);
         console.log(`Minting complete, mined: ${tx}`);
         setIsMinting(false);
-        router.reload()
+        router.reload();
       })
       .catch((error: any) => {
         console.log(error);
@@ -70,7 +70,7 @@ const TicketTypes: React.FC<Ticket> = ({
       })
   };
 
-  const cantMint = !Boolean(wallet) && !isMinting
+  const cantMint = !Boolean(wallet) && !isMinting;
 
   return (
     <FlexItem>
