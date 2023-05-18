@@ -8,14 +8,14 @@ export const config = {
   },
   '0x5': {
     name: 'Goerli',
-    contractAddress: "0x5e5e386F82e6A1a3cd140395CB8E9D3974024dE3",
+    contractAddress: "",
     symbol: "ETH",
     blockExplorer: 'https://goerli.etherscan.io',
     rpcUrl: `https://goerli.blockpi.network/v1/rpc/public`
   },
   '0x13881': {
     name: 'Mumbai',
-    contractAddress: "0x277Fb2217952Aa294a0f3BB37B7E024c2F836940",
+    contractAddress: "",
     symbol: "MATIC",
     blockExplorer: "https://mumbai.polygonscan.com",
     rpcUrl: "https://rpc-mumbai.maticvigil.com"
