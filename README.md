@@ -69,7 +69,7 @@ git clone https://github.com/MetaMask/onchain-svg-nft-tickets &&
 cd onchain-svg-nft-tickets && npm i
 ```
 
-Our GitHub repo's default branch is `start`, which is where you will be after cloning. If needed, you can switch to the `final` branch but remember that there are `.env` files which, if they do not exist, the project will not run. Those files require an Infura account/key and your test wallet's private key. We supply you with `.env.example` files which you can use, just rename them to `.env` and put your information in. When switching branches, you can keep you `.env` file by stashing and unstashing them when you switch branches. Just be sure not to commit `.env` file, as they contain sensitive information.
+Our GitHub repo's default branch is `start`, which is where you will be after cloning. If needed, you can switch to the `final` branch but remember that there are `.env` files which, if they do not exist, the project will not run. Those files require an Infura account/key and your test wallet's private key. We supply you with `.env.example` files which you can use, just rename them to `.env` and put your information in. When switching branches, you can keep you `.env` file by stashing and pop-stashing them when you switch branches. Just be sure not to commit `.env` files, as they contain sensitive information.
 
 **DO NOT USE YOUR REGULAR METAMASK WALLET FOR DEV/TESTING*
 
