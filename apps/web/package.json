@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@metamask/sdk": "^0.1.0",
+    "@metamask/sdk": "^0.3.0",
     "blockchain": "*",
     "ethers": "^5.7.2",
     "next": "^13.2.4",

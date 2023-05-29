@@ -1374,3 +1374,10 @@ This concludes our workshop; you could try deploying to Goerli with the same ste
 ## Thank You for Participating
 
 The MetaMask DevRel team and Eric Bishard at [@httpJunkie](https://twitter.com/httpjunkie) can be contacted on Twitter or Telegram.
+
+
+## Linea Build Steps:
+
+clone project and run `npm i && npm run build`
+Deploy contract on Linea: `npm run deploy:linea --workspace blockchain`
+Run frontend against deployed contract: `npm run dev:testnet`

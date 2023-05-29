@@ -5,7 +5,6 @@ import Image from "next/image";
 import { ETHTickets__factory } from "blockchain";
 import { config, isSupportedNetwork } from "../../lib/config";
 import { useMetaMask } from "../../hooks/useMetaMask";
-import SwitchNetwork from "../SwitchNetwork";
 
 import { TicketsOwnedView, Grid, SvgItem } from "../styledComponents/ticketsOwned";
 
@@ -35,6 +34,7 @@ const TicketsOwned = () => {
 
       const factory = new ETHTickets__factory(signer);
 
+      console.log('useEffect network supported', isSupportedNetwork(networkId));
       if (!isSupportedNetwork(networkId)) {
         return;
       }
@@ -43,6 +43,8 @@ const TicketsOwned = () => {
       const ticketsRetrieved: TicketFormatted[] = [];
 
       nftTickets.walletOfOwner(address).then((ownedTickets) => {
+        console.log(ownedTickets)
+        console.log(address)
         const promises = ownedTickets.map(async (t) => {
           const currentTokenId = t.toString();
           const currentTicket = await nftTickets.tokenURI(currentTokenId);
@@ -76,12 +78,11 @@ const TicketsOwned = () => {
     </SvgItem>
   ));
 
+  console.log(listOfTickets)
+
   return (
     <TicketsOwnedView>
-      {isSupportedNetwork(networkId)
-        ? <Grid columns={4} itemWidth={210} columnWidth={218}>{listOfTickets}</Grid>
-        : <SwitchNetwork {...{ textSize: 10, marginT: 1, marginR: 0, marginB: 0, marginL: 1 }} />
-      }
+      <Grid columns={4} itemWidth={210} columnWidth={218}>{listOfTickets}</Grid>
     </TicketsOwnedView>
   );
 };

@@ -1,3 +1,5 @@
+import ETHTickets from './contract-abis/ETHTickets.json'
+
 export const config = {
   '0x539': {
     name: 'Localhost 9545',
@@ -15,10 +17,17 @@ export const config = {
   },
   '0x13881': {
     name: 'Mumbai',
-    contractAddress: "",
+    contractAddress: '',//ETHTickets.networks[0x13881].address,
     symbol: "MATIC",
     blockExplorer: "https://mumbai.polygonscan.com",
     rpcUrl: "https://rpc-mumbai.maticvigil.com"
+  },
+  '0xe704': {
+    name: 'Linea',
+    contractAddress: ETHTickets.networks[0xe704].address,
+    symbol: "LineaETH",
+    blockExplorer: "https://explorer.goerli.linea.build",
+    rpcUrl: "https://rpc.goerli.linea.build"
   }
 };
 
@@ -28,5 +37,9 @@ export const config = {
  * @returns A function that takes an id and returns a boolean.
  */
 export const isSupportedNetwork = (id?: string | null): id is keyof typeof config => {
-  return !!(id && id in config);
+  if (!id) {
+    return false;
+  }
+  const networkId = id.startsWith('0x') ? id : `0x${Number(id).toString(16)}`;
+  return !!(networkId in config && process.env.NEXT_PUBLIC_NETWORK_ID === networkId);
 } 

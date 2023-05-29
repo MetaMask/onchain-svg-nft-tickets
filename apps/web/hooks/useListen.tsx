@@ -5,10 +5,10 @@ export const useListen = () => {
   const { dispatch } = useMetaMask();
 
   return () => {
-    window.ethereum.on("chainChanged", (networkId: string) => {
+    window.ethereum?.on("chainChanged", (networkId: string) => {
       dispatch({ type: "networkSwitched", networkId });
     });
-    window.ethereum.on("accountsChanged", async (newAccounts: string[]) => {
+    window.ethereum?.on("accountsChanged", async (newAccounts: string[]) => {
       if (newAccounts.length > 0) {
         // upon receiving a new wallet, we'll request again the balance to synchronize the UI.
         const newBalance = await window.ethereum!.request({

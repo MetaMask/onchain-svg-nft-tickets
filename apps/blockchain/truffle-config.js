@@ -1,5 +1,4 @@
 require("dotenv").config();
-
 /**
  * Use this file to configure your truffle project. It's seeded with some
  * common settings for different networks and features like migrations,
@@ -49,6 +48,15 @@ const HDWalletProvider = require("@truffle/hdwallet-provider");
 
 module.exports = {
   /**
+  * contracts_build_directory tells Truffle where to store compiled contracts
+  */
+    contracts_build_directory: '../web/lib/contract-abis',
+
+    /**
+    * contracts_directory tells Truffle where to find your contracts
+    */
+    contracts_directory: './contracts',
+  /**
    * Networks define how you connect to your ethereum client and let you set the
    * defaults web3 uses to send transactions. If you don't specify one truffle
    * will spin up a managed Ganache instance for you on port 9545 when you
@@ -82,6 +90,15 @@ module.exports = {
         });
       },
       network_id: 80001,
+    },
+    linea: {
+      provider: function () {
+        return new HDWalletProvider({
+          privateKeys: [process.env.PRIVATE_KEY],
+          provider: `https://linea-goerli.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
+        });
+      },
+      network_id: 59140,
     },
     development: {
       host: "127.0.0.1", // Localhost (default: none)

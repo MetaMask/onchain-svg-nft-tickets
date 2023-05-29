@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useListen } from "../hooks/useListen";
 import { useMetaMask } from "../hooks/useMetaMask";
+import { formatAddress } from '../utils'
 
 import { Button, FlexContainer, FlexItem } from "./styledComponents/general";
 import { NavigationView, Balance, RightNav, Logo } from "./styledComponents/navigation";
@@ -21,30 +22,35 @@ const Navigation = () => {
   const isConnected = status !== "pageNotLoaded" && typeof wallet === "string";
 
   const handleConnect = async () => {
+    if (!window.ethereum) {
+      return;
+    }
     dispatch({ type: "loading" });
-    const accounts = await window.ethereum.request({
+    const accounts = await window.ethereum.request<any[]>({
       method: "eth_requestAccounts",
     });
 
-    if (accounts.length > 0) {
-      const balance = await window.ethereum!.request({
+    if (accounts && accounts.length > 0) {
+      const balance = await window.ethereum.request<string>({
         method: "eth_getBalance",
         params: [accounts[0], "latest"],
       });
 
-      const networkId = await window.ethereum!.request({
+      const networkId = await window.ethereum.request<string>({
         method: "eth_chainId",
       });
 
-      if (networkId === process.env.NEXT_PUBLIC_NETWORK_ID) {
-        dispatch({ type: "connect", wallet: accounts[0], balance, networkId });
-      } else {
-        dispatch({
-          type: "wrongNetwork",
-          wallet: accounts[0],
-          balance,
-          networkId,
-        });
+      if (balance && networkId) {
+        if (networkId === process.env.NEXT_PUBLIC_NETWORK_ID) {
+          dispatch({ type: "connect", wallet: accounts[0], balance, networkId });
+        } else {
+          dispatch({
+            type: "wrongNetwork",
+            wallet: accounts[0],
+            balance,
+            networkId,
+          });
+        }
       }
       // register event listener for metamask wallet changes
       listen();
@@ -53,10 +59,6 @@ const Navigation = () => {
 
   const handleDisconnect = () => {
     dispatch({ type: "disconnect" });
-  };
-
-  const formatAddress = (addr: string) => {
-    return `${addr.substring(0, 5)}...${addr.substring(39)}`;
   };
 
   return (
@@ -86,9 +88,9 @@ const Navigation = () => {
                 </Button>
               )}
               {
-                status === "wrongNetwork" &&
-                <SwitchNetwork {...{ textSize: 10, marginR: 1 }} />
-              }
+                status === "wrongNetwork" && (
+                  <SwitchNetwork {...{ textSize: 10, marginR: 1 }} />
+              )}
               {!!wallet && (
                 <Link
                   className="text_link tooltip-bottom"

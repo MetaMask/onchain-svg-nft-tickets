@@ -13,7 +13,7 @@ export const Layout: React.FC<PropsWithChildren> = ({ children }) => {
       const ethereumProviderInjected = typeof window.ethereum !== "undefined";
       // Ensure it is MetaMask
       const isMetaMaskInstalled =
-        ethereumProviderInjected && Boolean(window.ethereum.isMetaMask);
+        ethereumProviderInjected && Boolean(window.ethereum?.isMetaMask);
 
       const local = window.localStorage.getItem("metamaskState");
 

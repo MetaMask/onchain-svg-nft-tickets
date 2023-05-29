@@ -5,13 +5,14 @@ import { useMetaMask } from "./useMetaMask";
 export const useSwitchNetwork = () => {
   const { dispatch } = useMetaMask();
   const networkId = process.env.NEXT_PUBLIC_NETWORK_ID;
-  
-  if(!isSupportedNetwork(networkId)) {
-    throw new Error('Unsupported network')
-  };
 
   const switchNetwork = async () => {
-    await window.ethereum.request({
+    console.log(networkId)
+    if(!isSupportedNetwork(networkId)) {
+      throw new Error('Unsupported network')
+    };
+  
+    await window.ethereum?.request({
       method: "wallet_addEthereumChain",
       params: [
         {
