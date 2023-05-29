@@ -1379,5 +1379,6 @@ The MetaMask DevRel team and Eric Bishard at [@httpJunkie](https://twitter.com/h
 ## Linea Build Steps:
 
 clone project and run `npm i && npm run build`
+to generate contract-abis `truffle compile`
 Deploy contract on Linea: `npm run deploy:linea --workspace blockchain`
 Run frontend against deployed contract: `npm run dev:testnet`

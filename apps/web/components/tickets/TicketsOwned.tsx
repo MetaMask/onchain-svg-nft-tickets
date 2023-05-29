@@ -34,7 +34,6 @@ const TicketsOwned = () => {
 
       const factory = new ETHTickets__factory(signer);
 
-      console.log('useEffect network supported', isSupportedNetwork(networkId));
       if (!isSupportedNetwork(networkId)) {
         return;
       }
@@ -43,8 +42,6 @@ const TicketsOwned = () => {
       const ticketsRetrieved: TicketFormatted[] = [];
 
       nftTickets.walletOfOwner(address).then((ownedTickets) => {
-        console.log(ownedTickets)
-        console.log(address)
         const promises = ownedTickets.map(async (t) => {
           const currentTokenId = t.toString();
           const currentTicket = await nftTickets.tokenURI(currentTokenId);
@@ -77,8 +74,6 @@ const TicketsOwned = () => {
       />
     </SvgItem>
   ));
-
-  console.log(listOfTickets)
 
   return (
     <TicketsOwnedView>
