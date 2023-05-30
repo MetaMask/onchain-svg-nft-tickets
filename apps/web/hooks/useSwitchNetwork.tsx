@@ -7,7 +7,6 @@ export const useSwitchNetwork = () => {
   const networkId = process.env.NEXT_PUBLIC_NETWORK_ID;
 
   const switchNetwork = async () => {
-    console.log(networkId)
     if(!isSupportedNetwork(networkId)) {
       throw new Error('Unsupported network')
     };
