@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const TicketsOwnedView = styled.div`
   padding: 1em;

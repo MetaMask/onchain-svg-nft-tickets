@@ -1,65 +1,65 @@
-import Link from "next/link";
-import { useListen } from "../hooks/useListen";
-import { useMetaMask } from "../hooks/useMetaMask";
+import Link from 'next/link'
+import { useListen } from '../hooks/useListen'
+import { useMetaMask } from '../hooks/useMetaMask'
 import { formatAddress } from '../utils'
 
-import { Button, FlexContainer, FlexItem } from "./styledComponents/general";
-import { NavigationView, Balance, RightNav, Logo } from "./styledComponents/navigation";
-import { SiEthereum } from "react-icons/si";
-import SwitchNetwork from "./SwitchNetwork";
+import { Button, FlexContainer, FlexItem } from './styledComponents/general'
+import { NavigationView, Balance, RightNav, Logo } from './styledComponents/navigation'
+import { SiEthereum } from 'react-icons/si'
+import SwitchNetwork from './SwitchNetwork'
 
 const Navigation = () => {
   const { dispatch, state: { status, isMetaMaskInstalled, wallet, balance } }
-    = useMetaMask();
+    = useMetaMask()
 
-  const listen = useListen();
+  const listen = useListen()
 
   const showInstallMetaMask =
-    status !== "pageNotLoaded" && !isMetaMaskInstalled;
+    status !== 'pageNotLoaded' && !isMetaMaskInstalled
   const showConnectButton =
-    status !== "pageNotLoaded" && isMetaMaskInstalled && !wallet;
+    status !== 'pageNotLoaded' && isMetaMaskInstalled && !wallet
 
-  const isConnected = status !== "pageNotLoaded" && typeof wallet === "string";
+  const isConnected = status !== 'pageNotLoaded' && typeof wallet === 'string'
 
   const handleConnect = async () => {
     if (!window.ethereum) {
-      return;
+      return
     }
-    dispatch({ type: "loading" });
+    dispatch({ type: 'loading' })
     const accounts = await window.ethereum.request<any[]>({
-      method: "eth_requestAccounts",
-    });
+      method: 'eth_requestAccounts',
+    })
 
     if (accounts && accounts.length > 0) {
       const balance = await window.ethereum.request<string>({
-        method: "eth_getBalance",
-        params: [accounts[0], "latest"],
-      });
+        method: 'eth_getBalance',
+        params: [accounts[0], 'latest'],
+      })
 
       const networkId = await window.ethereum.request<string>({
-        method: "eth_chainId",
-      });
+        method: 'eth_chainId',
+      })
 
       if (balance && networkId) {
         if (networkId === process.env.NEXT_PUBLIC_NETWORK_ID) {
-          dispatch({ type: "connect", wallet: accounts[0], balance, networkId });
+          dispatch({ type: 'connect', wallet: accounts[0], balance, networkId })
         } else {
           dispatch({
-            type: "wrongNetwork",
+            type: 'wrongNetwork',
             wallet: accounts[0],
             balance,
             networkId,
-          });
+          })
         }
       }
       // register event listener for metamask wallet changes
-      listen();
+      listen()
     }
-  };
+  }
 
   const handleDisconnect = () => {
-    dispatch({ type: "disconnect" });
-  };
+    dispatch({ type: 'disconnect' })
+  }
 
   return (
     <NavigationView>
@@ -73,7 +73,7 @@ const Navigation = () => {
           <RightNav widthPixel={wallet && balance ? 300 : 119}>
             {showConnectButton && (
               <Button textSize={10} marginR={1} onClick={handleConnect}>
-                {status === "loading" ? "loading..." : "Connect Wallet"}
+                {status === 'loading' ? 'loading...' : 'Connect Wallet'}
               </Button>
             )}
             {showInstallMetaMask && (
@@ -88,7 +88,7 @@ const Navigation = () => {
                 </Button>
               )}
               {
-                status === "wrongNetwork" && (
+                status === 'wrongNetwork' && (
                   <SwitchNetwork {...{ textSize: 10, marginR: 1 }} />
               )}
               {!!wallet && (
@@ -111,7 +111,7 @@ const Navigation = () => {
         </FlexItem>
       </FlexContainer>
     </NavigationView>
-  );
+  )
 }
 
-export default Navigation;
+export default Navigation

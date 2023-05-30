@@ -1,18 +1,18 @@
-import { config, isSupportedNetwork } from "../lib/config";
-import { useMetaMask } from "./useMetaMask";
+import { config, isSupportedNetwork } from '../lib/config'
+import { useMetaMask } from './useMetaMask'
 
 
 export const useSwitchNetwork = () => {
-  const { dispatch } = useMetaMask();
-  const networkId = process.env.NEXT_PUBLIC_NETWORK_ID;
+  const { dispatch } = useMetaMask()
+  const networkId = process.env.NEXT_PUBLIC_NETWORK_ID
 
   const switchNetwork = async () => {
     if(!isSupportedNetwork(networkId)) {
       throw new Error('Unsupported network')
-    };
+    }
   
     await window.ethereum?.request({
-      method: "wallet_addEthereumChain",
+      method: 'wallet_addEthereumChain',
       params: [
         {
           chainId: networkId,
@@ -28,15 +28,15 @@ export const useSwitchNetwork = () => {
           rpcUrls: [config[networkId].rpcUrl],
         },
       ],
-    });
+    })
   
     dispatch({
       type: 'networkSwitched',
       networkId
-    });
-  };
+    })
+  }
 
   return {
     switchNetwork
-  };
-};
+  }
+}

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 export const TicketsView = styled.div`
   padding-top: 0em;
@@ -6,7 +6,7 @@ export const TicketsView = styled.div`
   padding-bottom: 1em;
   padding-left: 1em;
   border-bottom: 1px solid #333;
-`;
+`
 
 export const TicketType = styled.div`
   border-radius: 10px;
@@ -18,15 +18,15 @@ export const TicketType = styled.div`
   -webkit-box-shadow: 3px 7px 33px -14px rgba(17,63,112,1);
   -moz-box-shadow: 3px 7px 33px -14px rgba(17,63,112,1);
   box-shadow: 3px 7px 33px -14px rgba(17,63,112,1);
-`;
+`
 
 export const HeadingText = styled.h1`
   color: #ccc;
-`;
+`
 
 export const TicketTypeText = styled.h2`
   color: #93cae5;
-`;
+`
 
 export const StyledAlert = styled.div`
   border-radius: 6px;
@@ -40,4 +40,4 @@ export const StyledAlert = styled.div`
   strong {
     color: #E2761B;
   }
-`;
+`

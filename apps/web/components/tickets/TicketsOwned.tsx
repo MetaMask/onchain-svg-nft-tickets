@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
-import { ethers } from "ethers";
-import Image from "next/image";
+import { useState, useEffect } from 'react'
+import { ethers } from 'ethers'
+import Image from 'next/image'
 
-import { ETHTickets__factory } from "blockchain";
-import { config, isSupportedNetwork } from "../../lib/config";
-import { useMetaMask } from "../../hooks/useMetaMask";
+import { ETHTickets__factory } from 'blockchain'
+import { config, isSupportedNetwork } from '../../lib/config'
+import { useMetaMask } from '../../hooks/useMetaMask'
 
-import { TicketsOwnedView, Grid, SvgItem } from "../styledComponents/ticketsOwned";
+import { TicketsOwnedView, Grid, SvgItem } from '../styledComponents/ticketsOwned'
 
 type NftData = {
   name: string,
@@ -14,55 +14,54 @@ type NftData = {
   attributes: { trait_type: any, value: any }[],
   owner: string,
   image: string
-};
+}
 
 type TicketFormatted = {
-  tokenId: string
-  svgImage: string
-  ticketType:
-  { trait_type: any, value: any }
-};
+  tokenId: string,
+  svgImage: string,
+  ticketType: { trait_type: any, value: any }
+}
 
 const TicketsOwned = () => {
-  const [ticketCollection, setTicketCollection] = useState<TicketFormatted[]>([]);
-  const { state: { wallet: address, networkId } } = useMetaMask();
+  const [ticketCollection, setTicketCollection] = useState<TicketFormatted[]>([])
+  const { state: { wallet: address, networkId } } = useMetaMask()
 
   useEffect(() => {
-    if (typeof window !== "undefined" && address !== null) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
+    if (typeof window !== 'undefined' && address !== null) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum)
+      const signer = provider.getSigner()
 
-      const factory = new ETHTickets__factory(signer);
+      const factory = new ETHTickets__factory(signer)
 
       if (!isSupportedNetwork(networkId)) {
-        return;
+        return
       }
 
-      const nftTickets = factory.attach(config[networkId].contractAddress);
-      const ticketsRetrieved: TicketFormatted[] = [];
+      const nftTickets = factory.attach(config[networkId].contractAddress)
+      const ticketsRetrieved: TicketFormatted[] = []
 
       nftTickets.walletOfOwner(address).then((ownedTickets) => {
         const promises = ownedTickets.map(async (t) => {
-          const currentTokenId = t.toString();
-          const currentTicket = await nftTickets.tokenURI(currentTokenId);
+          const currentTokenId = t.toString()
+          const currentTicket = await nftTickets.tokenURI(currentTokenId)
 
           const base64ToString = window.atob(
-            currentTicket.replace("data:application/json;base64,", "")
-          );
-          const nftData: NftData = JSON.parse(base64ToString);
+            currentTicket.replace('data:application/json;base64,', '')
+          )
+          const nftData: NftData = JSON.parse(base64ToString)
 
           ticketsRetrieved.push({
             tokenId: currentTokenId,
             svgImage: nftData.image,
             ticketType: nftData.attributes.find(
-              (t) => t.trait_type === "Ticket Type"
+              (t) => t.trait_type === 'Ticket Type'
             ),
-          } as TicketFormatted);
-        });
-        Promise.all(promises).then(() => setTicketCollection(ticketsRetrieved));
-      });
+          } as TicketFormatted)
+        })
+        Promise.all(promises).then(() => setTicketCollection(ticketsRetrieved))
+      })
     }
-  }, [address, networkId]);
+  }, [address, networkId])
 
   let listOfTickets = ticketCollection.map((ticket) => (
     <SvgItem pad={4} key={`ticket${ticket.tokenId}`}>
@@ -73,13 +72,13 @@ const TicketsOwned = () => {
         alt={`Ticket# ${ticket.tokenId}`}
       />
     </SvgItem>
-  ));
+  ))
 
   return (
     <TicketsOwnedView>
       <Grid columns={4} itemWidth={210} columnWidth={218}>{listOfTickets}</Grid>
     </TicketsOwnedView>
-  );
-};
+  )
+}
 
-export default TicketsOwned;
+export default TicketsOwned

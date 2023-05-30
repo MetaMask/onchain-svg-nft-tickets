@@ -1,54 +1,54 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
-import { useMetaMask } from "../../hooks/useMetaMask";
-import { ETHTickets__factory } from "blockchain";
-import { ethers } from "ethers";
-import { config, isSupportedNetwork } from "../../lib/config";
+import { useState } from 'react'
+import { useRouter } from 'next/router'
+import { useMetaMask } from '../../hooks/useMetaMask'
+import { ETHTickets__factory } from 'blockchain'
+import { ethers } from 'ethers'
+import { config, isSupportedNetwork } from '../../lib/config'
 
-import { SiEthereum } from 'react-icons/si';
+import { SiEthereum } from 'react-icons/si'
 
-import { Button, FlexContainer, FlexItem, } from "../styledComponents/general";
-import { HeadingText, TicketsView, TicketType, TicketTypeText, StyledAlert } from "../styledComponents/tickets";
+import { Button, FlexContainer, FlexItem, } from '../styledComponents/general'
+import { HeadingText, TicketsView, TicketType, TicketTypeText, StyledAlert } from '../styledComponents/tickets'
 
 interface Ticket {
-  type: string;
-  event: string;
-  description: string;
-  price: string;
-  priceHexValue: string;
+  type: string,
+  event: string,
+  description: string,
+  price: string,
+  priceHexValue: string,
 }
 interface TicketsProps {
-  tickets: Ticket[];
+  tickets: Ticket[],
 }
 
 const TicketTypes: React.FC<Ticket> = ({
   type, event, description, price, priceHexValue
 }) => {
 
-  const { state: { wallet }, } = useMetaMask();
-  const router = useRouter();
-  const [isMinting, setIsMinting] = useState(false);
-  const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const { state: { wallet }, } = useMetaMask()
+  const router = useRouter()
+  const [isMinting, setIsMinting] = useState(false)
+  const [error, setError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const mintTicket = async () => {
-    setIsMinting(true);
+    setIsMinting(true)
 
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
     // In ethers.js, providers allow you to query data from the blockchain. 
     // They represent the way you connect to the blockchain. 
     // With them you can only call view methods on contracts and get data from those contract.
     // Signers are authenticated providers connected to the current address in MetaMask.
-    const signer = provider.getSigner();
+    const signer = provider.getSigner()
 
-    const factory = new ETHTickets__factory(signer);
+    const factory = new ETHTickets__factory(signer)
     const networkId = process.env.NEXT_PUBLIC_NETWORK_ID
 
     if(!isSupportedNetwork(networkId)) {
       throw new Error('Set either `0x5` for goerli or `0x13881` for mumbai in apps/web/.env or .env.local')
     }
     
-    const nftTickets = factory.attach(config[networkId].contractAddress);
+    const nftTickets = factory.attach(config[networkId].contractAddress)
 
     nftTickets
       .mintNFT({
@@ -57,20 +57,20 @@ const TicketTypes: React.FC<Ticket> = ({
       })
       .then(async (tx: any) => {
         console.log('minting accepted')
-        await tx.wait(1);
-        console.log(`Minting complete, mined: ${tx}`);
-        setIsMinting(false);
-        router.reload();
+        await tx.wait(1)
+        console.log(`Minting complete, mined: ${tx}`)
+        setIsMinting(false)
+        router.reload()
       })
       .catch((error: any) => {
-        console.log(error);
-        setError(true);
-        setErrorMessage(error?.message);
-        setIsMinting(false);
+        console.log(error)
+        setError(true)
+        setErrorMessage(error?.message)
+        setIsMinting(false)
       })
-  };
+  }
 
-  const cantMint = !Boolean(wallet) && !isMinting;
+  const cantMint = !Boolean(wallet) && !isMinting
 
   return (
     <FlexItem>
@@ -91,8 +91,8 @@ const TicketTypes: React.FC<Ticket> = ({
         }
       </TicketType>
     </FlexItem>
-  );
-};
+  )
+}
 
 const Tickets = ({ tickets }: TicketsProps) => {
   return (
@@ -104,7 +104,7 @@ const Tickets = ({ tickets }: TicketsProps) => {
         ))}
       </FlexContainer>
     </TicketsView>
-  );
-};
+  )
+}
 
-export default Tickets;
+export default Tickets
