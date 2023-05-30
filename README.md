@@ -6,26 +6,29 @@ This workshop starts with a [React](https://beta.reactjs.org) / [NextJS](https:/
 
 ## Decisions We Have Made
 
-We have gone with a mono repo to respectfully separate our **blockchain** and **web** projects. Smart contracts in one directory and our React / NextJS frontend in another, with the ability to have their distinct dependencies (`package.json`), but all existing in one workspace.  
+We use a mono repo to separate our **blockchain** and **web** projects. Smart contracts in one directory and our React / NextJS frontend in another. Each has their own dependencies (`package.json`), but all in one repository.  
 
 We have chosen [Turbo](https://turbo.build) for an incremental bundler/build system optimized for JavaScript and TypeScript mono repos.
 
-We use NextJS, a popular React framework for building web3 projects, so that those with traditional web development experience will feel more at home with our setup. NextJS is not a client-only framework, so it will always do an initial render on the server side. Therefore, it requires a slightly different approach when integrating MetaMask as it works by injecting on the window object. 
+We use NextJS for building web3 projects, this gives us conventions like routing based on pages, as well the traditional web development experience will feel more at home with our setup. NextJS is not a client-only framework, so it will always do an initial render on the server side. Therefore, it requires a slightly different approach when integrating MetaMask as it works by injecting on the window object. 
 
-We have decided to use React's Context API to manage the wallet state to bring as much value as possible in this workshop, knowing that many developers are starting to choose NextJS for Web2 and Web3 applications. 
+We have decided to use React's Context API to manage the wallet state to bring as much value as possible in this workshop. 
 
-In this workshop, we create a `MetaMaskProvider`, which is not standard or out of the box with MetaMask SDK and something you will undoubtedly need to build with React and MetaMask. We present one approach on how to do this so that you can keep your wallet state in sync with your web dApp using global State.
+In this workshop, we create a `MetaMaskProvider`, which is not standard or out of the box with MetaMask SDK (yet) and in the future we hope to introduce a package that has UI, components and state management capabilities. We present one approach on how to do this so that you can keep your wallet state in sync with your web dApp using global State, but understand that you always do it another way or plug into your own state management solution.
 
-This workshop also utilizes [TypeScript](https://www.typescriptlang.org/docs/handbook/intro.html) and [TypeChain](https://github.com/dethcrypto/TypeChain) (TypeScript bindings for Ethereum smart contracts) to ensure that we can extend JavaScript and overall improve the developer experience. These choices enable developers to add type safety. Moreover, TypeScript provides various other features, like interfaces, type aliases, abstract classes, function overloading, tuple, generics, etc.  
+This workshop utilizes [TypeScript](https://www.typescriptlang.org/docs/handbook/intro.html) and [TypeChain](https://github.com/dethcrypto/TypeChain) (TypeScript bindings for Ethereum smart contracts) to ensure that we can extend JavaScript and overall improve the developer experience. These choices enable developers to add type safety. Moreover, TypeScript provides various other features, like interfaces, type aliases, abstract classes, function overloading, tuple, generics, etc.  
 
-We have purposefully made choices to reduce the number of overall dependencies outside of configuration for this type of project. We do some things, like state management and deployment of contracts, manually to teach the basics rather than lean on other platforms or libraries. After completing this workshop, you should understand what it takes to build and deploy a basic dApp to a testnet like Ethereum's Goerli or Polygon's Mumbai.
+We have made choices to reduce the number of overall dependencies outside of configuration for this type of project. We show state management and deployment of contracts manually to teach the basics rather than lean on other platforms or libraries. After completing this workshop, you should understand what it takes to build and deploy a basic dApp to a testnet like [Linea](https://linea.build/), Goerli or Polygon's Mumbai.
 
-## Prerequisites:
+## Prerequisites
+
 - NodeJS 18.1 & NPM 9.5.0
 - Code Editor + GitHub account
 - Truffle and Ganache installed
 - [MetaMask Extension](https://metamask.io/download) or [MetaMask Flask](https://metamask.io/flask/) Installed
 - 0.1 GoerliETH/MATIC (for testnets)
+  - Linea Faucet
+    - https://www.infura.io/faucet/linea
   - Goerli Faucets
     - https://goerlifaucet.com
     - https://goerlifaucet.org
@@ -34,7 +37,8 @@ We have purposefully made choices to reduce the number of overall dependencies o
   - Mumbai Faucets
     - https://faucet.polygon.technology
     - https://mumbaifaucet.com
-  - Network Information
+  - Add Network/Chain
+    - https://chainlist.org/chain/59140
     - https://chainlist.org/chain/5
     - https://chainlist.org/chain/80001
 
@@ -54,11 +58,11 @@ We will start by building our project from our starting point and running everyt
 
 ### Deploy and Test using a Testnet
 
-Once we have our app working locally, we will talk about how to change our config and environment variables to deploy to a testnet; this will require having either MATIC on Polygon's Mumbai testnet or GoerliETH on Ethereum's Goerli Testnet. The links above should help you drip 💧 that test ETH to your wallet.  
+Once we have our app working locally, we will talk about how to change our config and environment variables to deploy to a testnet; this will require having either LineaETH on Linea Testnet, MATIC on Polygon's Mumbai testnet or GoerliETH on Ethereum's Goerli Testnet. The [Linea or other faucet links above](#prerequisites) should help you drip 💧 that test ETH to your wallet.  
 
-We suggest having about 0.1 testnet ETH or MATIC to deploy and test your application. In theory, you will not need all that, but that's how much one person can quickly get in one day for a workshop. If needed [Eric Bishard](https://twitter.com/httpjunkie) can send you some if you DM me.  
+We suggest having about 0.1 testnet ETH or MATIC to deploy and test your application. In theory, you will not need all that, but that's how much one person can quickly get in one day for a workshop. If needed [Eric Bishard](https://twitter.com/httpjunkie) can send you some 😂, he always got that 💧.  
 
-If you plan on deploying to a testnet, visit the ChainList site for [Mumbai](https://chainlist.org/chain/80001) and [Goerli](https://chainlist.org/chain/5) and click "connect wallet" to ensure you have those networks setup in MetaMask
+If you plan on deploying to a testnet, visit the ChainList site for [Linea](https://chainlist.org/chain/59140), [Mumbai](https://chainlist.org/chain/80001) and [Goerli](https://chainlist.org/chain/5) and click "connect wallet" to ensure you have those networks setup in MetaMask
 
 ## Getting Started 🎯
 
