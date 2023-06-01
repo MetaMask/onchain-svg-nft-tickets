@@ -8,7 +8,6 @@ import Navigation from '../components/Navigation'
 import TicketsOwned from "../components/tickets/TicketsOwned"
 
 const Mint: NextPage = () => {
-  // const { state: { networkId } } = useMetaMask()
   // Get ETH as a small number ("0.01" => "10000000000000000")
   const bigNumberify = (amt: string) => ethers.utils.parseEther(amt)
 
