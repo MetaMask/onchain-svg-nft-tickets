@@ -20,19 +20,19 @@ export const useListen = () => {
           method: 'eth_chainId',
         })
 
-        if (isSupportedNetwork(networkId)) {
+        if (isSupportedNetwork(networkId as string)) {
           dispatch({
             type: 'connect',
             wallet: newAccounts[0],
-            balance: newBalance,
-            networkId,
+            balance: newBalance as string,
+            networkId: networkId as string,
           })
         } else {
           dispatch({
             type: 'wrongNetwork',
             wallet: newAccounts[0],
-            balance: newBalance,
-            networkId,
+            balance: newBalance as string,
+            networkId: networkId as string,
           })
         }
       } else {

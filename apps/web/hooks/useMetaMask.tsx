@@ -1,4 +1,5 @@
-import React, { type PropsWithChildren } from 'react'
+import MetaMaskSDK from '@metamask/sdk'
+import React, { useEffect, type PropsWithChildren, useState } from 'react'
 
 type ConnectAction = {
   type: 'connect',
@@ -23,6 +24,7 @@ type PageLoadedAction = {
 }
 type LoadingAction = { type: 'loading' }
 type IdleAction = { type: 'idle' }
+type LogMintAction = { type: 'logMint' }
 type NetworkSwitchedAction = { type: 'networkSwitched', networkId: string }
 type Action =
   | ConnectAction
@@ -31,16 +33,18 @@ type Action =
   | LoadingAction
   | IdleAction
   | WrongNetworkAction
-  | NetworkSwitchedAction;
+  | NetworkSwitchedAction
+  | LogMintAction
 
 type Dispatch = (action: Action) => void
 
-type Status = 'loading' | 'idle' | 'pageNotLoaded' | 'wrongNetwork'
+type Status = 'loading' | 'idle' | 'pageNotLoaded' | 'wrongNetwork' | 'mintSwitch'
 
 type State = {
   wallet: string | null,
   isMetaMaskInstalled: boolean,
   status: Status,
+  mints: Number,
   networkId: string | null,
   balance: string | null
 };
@@ -49,6 +53,7 @@ const initialState: State = {
   wallet: null,
   isMetaMaskInstalled: false,
   status: 'loading',
+  mints: 0,
   balance: null,
   networkId: null,
 } as const
@@ -81,7 +86,7 @@ function metamaskReducer(state: State, action: Action): State {
     case 'disconnect': {
       window.localStorage.removeItem('metamaskState')
       if (typeof window.ethereum !== undefined) {
-        window.ethereum.removeAllListeners(['accountsChanged'])
+        window.ethereum?.removeAllListeners('accountsChanged')
       }
       return { ...state, wallet: null, balance: null, networkId: null }
     }
@@ -105,6 +110,10 @@ function metamaskReducer(state: State, action: Action): State {
       window.localStorage.setItem('metamaskState', JSON.stringify(newState))
       return newState as State
     }
+    case 'logMint': {
+      const newMints = +state.mints + 1
+      return { ...state, mints: newMints }
+    }
     default: {
       throw new Error('Unhandled action type')
     }
@@ -117,7 +126,24 @@ const MetaMaskContext = React.createContext<
 
 function MetaMaskProvider({ children }: PropsWithChildren) {
   const [state, dispatch] = React.useReducer(metamaskReducer, initialState)
-  const value = { state, dispatch }
+  const [mmSDK, setSDK] = useState<MetaMaskSDK>();
+  const value = { mmSDK, state, dispatch }
+
+  useEffect(() => {
+    const clientSDK = new MetaMaskSDK({
+      useDeeplink: false,
+      //communicationServerUrl: 'https://metamask-sdk-socket.metafi.codefi.network/', 
+      //process.env.NEXT_PUBLIC_COMM_SERVER_URL,
+      autoConnect: { enable: true },
+      dappMetadata: {
+        name: "NFT Tickets",
+        url: window.location.host,
+      },
+      logging: { developerMode: false },
+      storage: { enabled: true }
+    })
+    setSDK(clientSDK)
+  }, [])
 
   return (
     <MetaMaskContext.Provider value={value}>

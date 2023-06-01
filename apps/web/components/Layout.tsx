@@ -1,16 +1,17 @@
 import { PropsWithChildren, useEffect } from 'react'
 import { useListen } from '../hooks/useListen'
 import { useMetaMask } from '../hooks/useMetaMask'
-import { instantiateSdk } from '../lib/MetaMaskSdk'
 
 export const Layout: React.FC<PropsWithChildren> = ({ children }) => {
   const { dispatch } = useMetaMask()
   const listen = useListen()
 
   useEffect(() => {
+    console.log("useEffect in Layout")
     if (typeof window !== undefined) {
       // is window.ethereum is present? indicating a wallet extension
       const ethereumProviderInjected = typeof window.ethereum !== 'undefined'
+      
       // Ensure it is MetaMask
       const isMetaMaskInstalled =
         ethereumProviderInjected && Boolean(window.ethereum?.isMetaMask)
@@ -28,7 +29,6 @@ export const Layout: React.FC<PropsWithChildren> = ({ children }) => {
         : // backup if local storage is empty
           { wallet: null, balance: null, networkId: null }
 
-      instantiateSdk()
       dispatch({ type: 'pageLoaded', isMetaMaskInstalled, wallet, balance, networkId })
     }
   }, [])

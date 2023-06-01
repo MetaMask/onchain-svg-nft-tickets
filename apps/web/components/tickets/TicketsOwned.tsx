@@ -24,7 +24,7 @@ type TicketFormatted = {
 
 const TicketsOwned = () => {
   const [ticketCollection, setTicketCollection] = useState<TicketFormatted[]>([])
-  const { state: { wallet: address, networkId } } = useMetaMask()
+  const { state: { wallet: address, networkId, mints } } = useMetaMask()
 
   useEffect(() => {
     if (typeof window !== 'undefined' && address !== null) {
@@ -39,7 +39,7 @@ const TicketsOwned = () => {
 
       const nftTickets = factory.attach(config[networkId].contractAddress)
       const ticketsRetrieved: TicketFormatted[] = []
-
+ 
       nftTickets.walletOfOwner(address).then((ownedTickets) => {
         const promises = ownedTickets.map(async (t) => {
           const currentTokenId = t.toString()
@@ -61,7 +61,7 @@ const TicketsOwned = () => {
         Promise.all(promises).then(() => setTicketCollection(ticketsRetrieved))
       })
     }
-  }, [address, networkId])
+  }, [address, networkId, mints])
 
   let listOfTickets = ticketCollection.map((ticket) => (
     <SvgItem pad={4} key={`ticket${ticket.tokenId}`}>

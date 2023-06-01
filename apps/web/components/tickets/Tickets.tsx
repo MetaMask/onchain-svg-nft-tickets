@@ -25,7 +25,7 @@ const TicketTypes: React.FC<Ticket> = ({
   type, event, description, price, priceHexValue
 }) => {
 
-  const { state: { wallet }, } = useMetaMask()
+  const { dispatch, state: { wallet }, } = useMetaMask()
   const router = useRouter()
   const [isMinting, setIsMinting] = useState(false)
   const [error, setError] = useState(false)
@@ -60,12 +60,13 @@ const TicketTypes: React.FC<Ticket> = ({
         await tx.wait(1)
         console.log(`Minting complete, mined: ${tx}`)
         setIsMinting(false)
-        router.reload()
+        // router.reload()
+        dispatch({ type: 'logMint' })
       })
       .catch((error: any) => {
-        console.log(error)
+        console.log('error: ', error)
         setError(true)
-        setErrorMessage(error?.message)
+        setErrorMessage(error.message ? error.message : `MetaMask Mobile Error Code: ${error.code}`)
         setIsMinting(false)
       })
   }
@@ -80,8 +81,7 @@ const TicketTypes: React.FC<Ticket> = ({
         <Button disabled={cantMint} onClick={mintTicket}>
           <SiEthereum /> {isMinting ? 'Minting...' : 'Mint'} Ticket
         </Button>
-        {
-          error && (
+        { error && (
             <StyledAlert onClick={() => setError(false)}>
               <span>
                 <strong>Error:</strong> {errorMessage}
