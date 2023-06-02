@@ -139,7 +139,7 @@ contract ETHTickets is ERC721Enumerable, Ownable {
       '<linearGradient id="',(vipTicketHolders[id] ? "vpBg" : "gaBg"),'"><stop offset="5%" stop-color="#',(vipTicketHolders[id] ? "460090" : "00385D"),'" /><stop offset="95%" stop-color="#',(vipTicketHolders[id] ? "61008C" : "00528B"), '"/></linearGradient>',
       '<g transform="matrix(0.966539,0,0,0.966539,4.93126,4.90586)"><path style="fill:url(#',(vipTicketHolders[id] ? "vpBg" : "gaBg"),');" d="M0.071,201.848L300.111,201.848L300.111,10.272C300.111,4.656 295.552,0.097 289.936,0.097L10.245,0.097C4.63,0.097 0.071,4.656 0.071,10.272L0.071,201.848Z"/></g>',
       '<g transform="matrix(1.6679,0,0,1.6679,-25,-40)"><text x="24px" y="54px" class="s1 s2b s3">ETH Atlantis</text></g>',
-      '<g transform="matrix(1.6679,0,0,1.6679,-25,-10)"><text x="24px" y="54px" class="s1 s2b s5">2022, Nov 18 / ',(vipTicketHolders[id] ? "VIP" : "GA"),'</text></g>',
+      '<g transform="matrix(1.6679,0,0,1.6679,-25,-10)"><text x="24px" y="54px" class="s1 s2b s5">2024, July 4 / ',(vipTicketHolders[id] ? "VIP" : "GA"),'</text></g>',
       '<g transform="matrix(1.6679,0,0,1.6679,-25,85)"><text x="24px" y="54px" class="s1 s2b s8">',nftOwner,'</text></g>'
     ));
   }
