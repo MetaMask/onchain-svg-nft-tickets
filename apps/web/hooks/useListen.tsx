@@ -1,7 +1,6 @@
 import { MetaMaskInpageProvider } from '@metamask/providers'
 import { MetaMaskSDK } from '@metamask/sdk'
 import { ConnectionStatus, EventType, ServiceStatus } from '@metamask/sdk-communication-layer'
-import { ethers } from 'ethers'
 
 import { useEffect, useState } from 'react'
 import { isSupportedNetwork } from '../lib/config'
