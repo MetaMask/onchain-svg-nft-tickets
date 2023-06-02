@@ -40,7 +40,7 @@ const Mint: NextPage = () => {
       <Head>
         <title>ETH Atlantis 2022</title>
         <meta property="og:title" content="The largest underwater Ethereum event in history" key="title" />
-        {/* <link rel="icon" href="/favicon.ico" /> */}
+        <link rel="icon" href="/metamask.png" />
       </Head>
 
       <Navigation />
