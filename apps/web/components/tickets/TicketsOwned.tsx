@@ -76,7 +76,7 @@ const TicketsOwned = () => {
 
   return (
     <TicketsOwnedView>
-      <Grid columns={4} itemWidth={210} columnWidth={218}>{listOfTickets}</Grid>
+      <Grid columns={4} itemWidth={210} columnWidth={218}>{listOfTickets}</Grid> 
     </TicketsOwnedView>
   )
 }

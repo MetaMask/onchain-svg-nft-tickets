@@ -4,13 +4,16 @@ import Head from 'next/head'
 import { ethers } from 'ethers'
 
 import Tickets from '../components/tickets/Tickets'
-import TicketsOwned from '../components/tickets/TicketsOwned'
 import Navigation from '../components/Navigation'
+
+import { useMetaMask } from '../hooks/useMetaMask'
 
 const Mint: NextPage = () => {
   // const { state: { networkId } } = useMetaMask()
   // Get ETH as a small number ("0.01" => "10000000000000000")
   const bigNumberify = (amt: string) => ethers.utils.parseEther(amt)
+
+  const { state: { sdkConnected } } = useMetaMask()
 
   const ethGa = "0.01"
   const ethVip = "0.02"
@@ -38,11 +41,13 @@ const Mint: NextPage = () => {
       <Head>
         <title>ETH Atlantis 2022</title>
         <meta property="og:title" content="The largest underwater Ethereum event in history" key="title" />
+        {/* <link rel="icon" href="/favicon.ico" /> */}
       </Head>
 
       <Navigation />
-      <Tickets tickets={tickets} />
-      <TicketsOwned /> 
+      {/* { sdkConnected ||   */}
+      <Tickets tickets={tickets} /> 
+      {/* } */}
     </div>
   )
 }

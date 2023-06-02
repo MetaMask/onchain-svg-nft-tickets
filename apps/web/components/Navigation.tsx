@@ -1,25 +1,31 @@
 import Link from 'next/link'
 import { useListen } from '../hooks/useListen'
 import { useMetaMask } from '../hooks/useMetaMask'
+
 import { formatAddress } from '../utils'
 
 import { Button, FlexContainer, FlexItem } from './styledComponents/general'
 import { NavigationView, Balance, RightNav, Logo } from './styledComponents/navigation'
 import { SiEthereum } from 'react-icons/si'
 import SwitchNetwork from './SwitchNetwork'
+import router from 'next/router'
 
 const Navigation = () => {
-  const { dispatch, state: { status, isMetaMaskInstalled, wallet, balance } }
+  const { dispatch, state: { status, isMetaMaskInstalled, wallet, balance, sdkConnected } }
     = useMetaMask()
 
   const listen = useListen()
 
   const showInstallMetaMask =
     status !== 'pageNotLoaded' && !isMetaMaskInstalled
+    const isConnected = status !== 'pageNotLoaded' && typeof wallet === 'string'
   const showConnectButton =
-    status !== 'pageNotLoaded' && isMetaMaskInstalled && !wallet
+    status !== 'pageNotLoaded' && isMetaMaskInstalled && !wallet && !isConnected
 
-  const isConnected = status !== 'pageNotLoaded' && typeof wallet === 'string'
+
+
+  console.log('sdkConnected: ', sdkConnected) // MMSDK Events (window.ethereum.on([_initialized || connect])
+  console.log('isConnected: ', isConnected )  // status !== 'pageNotLoaded' && typeof wallet === 'string'
 
   const handleConnect = async () => {
     if (!window.ethereum) {
@@ -59,6 +65,11 @@ const Navigation = () => {
 
   const handleDisconnect = () => {
     dispatch({ type: 'disconnect' })
+    router.reload()
+  }
+
+  const handleTerminate = () => {
+    console.log("This will be terminate")
   }
 
   return (
@@ -71,7 +82,8 @@ const Navigation = () => {
         </FlexItem>
         <FlexItem widthPercent={50}>
           <RightNav widthPixel={wallet && balance ? 300 : 119}>
-            {showConnectButton && (
+
+            { showConnectButton && !sdkConnected && (
               <Button textSize={10} marginR={1} onClick={handleConnect}>
                 {status === 'loading' ? 'loading...' : 'Connect Wallet'}
               </Button>
@@ -82,9 +94,14 @@ const Navigation = () => {
               </Link>
             )}
             <>
-              {isConnected && status !== 'wrongNetwork' && (
+              {isConnected && !sdkConnected && status !== 'wrongNetwork' && (
                 <Button textSize={10} marginR={1} onClick={handleDisconnect}>
                   Disconnect
+                </Button>
+              )}
+              {sdkConnected && status !== 'wrongNetwork' && (
+                <Button textSize={10} marginR={1} >
+                  Terminate
                 </Button>
               )}
               {

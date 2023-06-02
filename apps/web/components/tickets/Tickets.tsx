@@ -9,6 +9,7 @@ import { SiEthereum } from 'react-icons/si'
 
 import { Button, FlexContainer, FlexItem, } from '../styledComponents/general'
 import { HeadingText, TicketsView, TicketType, TicketTypeText, StyledAlert } from '../styledComponents/tickets'
+import TicketsOwned from '../../components/tickets/TicketsOwned'
 
 interface Ticket {
   type: string,
@@ -66,7 +67,7 @@ const TicketTypes: React.FC<Ticket> = ({
       .catch((error: any) => {
         console.log('error: ', error)
         setError(true)
-        setErrorMessage(error.message ? error.message : `MetaMask Mobile Error Code: ${error.code}`)
+        setErrorMessage(error.message ? error.message : `Mobile Error Code: ${error.code}`)
         setIsMinting(false)
       })
   }
@@ -84,7 +85,7 @@ const TicketTypes: React.FC<Ticket> = ({
         { error && (
             <StyledAlert onClick={() => setError(false)}>
               <span>
-                <strong>Error:</strong> {errorMessage}
+                <strong>MetaMask Rejected:</strong> { errorMessage }
               </span>
             </StyledAlert>
           )
@@ -96,14 +97,17 @@ const TicketTypes: React.FC<Ticket> = ({
 
 const Tickets = ({ tickets }: TicketsProps) => {
   return (
-    <TicketsView>
-      <HeadingText>Ticket Types</HeadingText>
-      <FlexContainer gap={1}>
-        {tickets.map((ticket) => (
-          <TicketTypes key={ticket.type} {...ticket} />
-        ))}
-      </FlexContainer>
-    </TicketsView>
+    <>
+      <TicketsView>
+        <HeadingText>Ticket Types</HeadingText>
+        <FlexContainer gap={1}>
+          {tickets.map((ticket) => (
+            <TicketTypes key={ticket.type} {...ticket} />
+          ))}
+        </FlexContainer>
+      </TicketsView>
+      <TicketsOwned /> 
+    </>
   )
 }
 
