@@ -50,7 +50,7 @@ module.exports = {
   /**
   * contracts_build_directory tells Truffle where to store compiled contracts
   */
-    contracts_build_directory: '../web/lib/contract-abis',
+    contracts_build_directory: '../web/src/lib/contract-abis',
 
     /**
     * contracts_directory tells Truffle where to find your contracts

@@ -1,19 +1,19 @@
 {
-  "globalEnv": ["NEXT_PUBLIC_NETWORK_ID", "NEXT_PUBLIC_INFURA_PROJECT_ID"],
+  "globalEnv": ["VITE_PUBLIC_NETWORK_ID", "VITE_PUBLIC_INFURA_PROJECT_ID"],
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"]
-    },
-    "lint": {
-      "outputs": []
+      "outputs": ["dist/**"]
     },
     "local": {
       "cache": false
     },
     "dev": {
       "cache": false
+    },
+    "lint": {
+      "outputs": []
     }
   }
 }
