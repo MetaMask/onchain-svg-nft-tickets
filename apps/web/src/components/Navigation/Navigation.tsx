@@ -1,9 +1,9 @@
 import { SiEthereum } from 'react-icons/si'
 import { useMetaMask } from '~/hooks/useMetaMask'
-import { formatAddress, formatBalance } from '~/utils'
+import { formatAddress } from '~/utils'
 import { isSupportedNetwork } from '~/lib/config'
-import styles from './Navigation.module.css'
 import SwitchNetwork from '~/components/SwitchNetwork/SwitchNetwork'
+import styles from './Navigation.module.css'
 
 export const Navigation = () => {
 
@@ -38,7 +38,7 @@ export const Navigation = () => {
               </a>
             )}
             {wallet && (
-              <div>
+              <div className={styles.balance}>
                 {wallet.balance} ETH
               </div>
             )}
