@@ -11,7 +11,7 @@ export const Navigation = () => {
   const networkId = import.meta.env.VITE_PUBLIC_NETWORK_ID
   const supportedNetwork = isSupportedNetwork(networkId)
 
-  console.log(wallet.balance)
+  console.log(supportedNetwork)
 
   return (
     <div className={styles.navigation}>
@@ -26,10 +26,9 @@ export const Navigation = () => {
             </button>
           }
           <>
-            {
-              !supportedNetwork && (
-                <SwitchNetwork />
-              )}
+            {!supportedNetwork && (
+              <SwitchNetwork />
+            )}
             {wallet && (
               <a
                 className="text_link tooltip-bottom"
