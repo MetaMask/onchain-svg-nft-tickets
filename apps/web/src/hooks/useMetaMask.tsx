@@ -4,16 +4,11 @@ import { MetaMaskInpageProvider } from '@metamask/providers'
 import { MetaMaskSDK } from '@metamask/sdk'
 import { formatBalance } from '~/utils'
 
-declare global {
-  interface Window {
-    ethereum?: MetaMaskInpageProvider;
-  }
-}
-
 interface WalletState {
   accounts: any[],
   balance: string,
-  chainId: string
+  chainId: string,
+  address: string
 }
 
 interface MetaMaskContextData {
@@ -27,14 +22,13 @@ interface MetaMaskContextData {
   terminate: () => void
 }
 
-const disconnectedState: WalletState = { accounts: [], balance: '', chainId: '' }
+const disconnectedState: WalletState = { accounts: [], balance: '', chainId: '', address: '' }
 const MetaMaskContext = createContext<MetaMaskContextData>({} as MetaMaskContextData)
 let _initialized = false;
 
 export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
   const [sdk, setSDK] = useState<MetaMaskSDK>()
   const [sdkConnected, setSdkConnected] = useState(false)
-
   const [isConnecting, setIsConnecting] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const clearError = () => setErrorMessage('')
@@ -57,9 +51,11 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
       return
     }
 
+    const address: string = accounts[0]
+
     const balanceRaw: string = await window.ethereum?.request({
       method: 'eth_getBalance',
-      params: [accounts[0], 'latest'],
+      params: [address, 'latest'],
     }) as string
     const balance = formatBalance(balanceRaw)
 
@@ -67,7 +63,7 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
       method: 'eth_chainId',
     }) as string
 
-    setWallet({ accounts, balance, chainId })
+    setWallet({ accounts, balance, chainId, address })
   }, [])
 
   const updateWalletAndAccounts = useCallback(() => _updateWallet(), [_updateWallet])
@@ -156,7 +152,7 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
         sdkConnected,
         connectMetaMask,
         clearError,
-        terminate
+        terminate,
       }}
     >
       {children}

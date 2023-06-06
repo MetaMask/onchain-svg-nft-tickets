@@ -26,9 +26,8 @@ const TicketsOwned = () => {
   const { wallet } = useMetaMask()
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && wallet.accounts[0] !== null) {
-      let provider;
-      window.ethereum?.enable().then(provider = new ethers.providers.Web3Provider(window.ethereum));
+    if (typeof window !== 'undefined' && wallet.address !== null) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum)
       const signer = provider.getSigner()
 
       const factory = new ETHTickets__factory(signer)
@@ -40,7 +39,7 @@ const TicketsOwned = () => {
       const nftTickets = factory.attach(config[wallet.chainId].contractAddress)
       const ticketsRetrieved: TicketFormatted[] = []
 
-      nftTickets.walletOfOwner(wallet.accounts[0]).then((ownedTickets) => {
+      nftTickets.walletOfOwner(wallet.address).then((ownedTickets) => {
         const promises = ownedTickets.map(async (t) => {
           const currentTokenId = t.toString()
           const currentTicket = await nftTickets.tokenURI(currentTokenId)
@@ -61,7 +60,7 @@ const TicketsOwned = () => {
         Promise.all(promises).then(() => setTicketCollection(ticketsRetrieved))
       })
     }
-  }, [wallet.accounts[0], wallet.chainId])
+  }, [wallet.address, wallet.chainId])
 
   const listOfTickets = ticketCollection.map((ticket) => (
     <div className={styles.svgItem} key={`ticket${ticket.tokenId}`}>

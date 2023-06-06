@@ -61,16 +61,16 @@ button {
   cursor: pointer;
   cursor: hand;
   user-select: none;
+}
 
-  &:hover {
-    background-color: #244982;
-  }
-  
-  &:disabled {
-    background-color: #244982;
-    color: #7697C8;
-    cursor: not-allowed;
-  }
+button:hover {
+  background-color: #244982;
+}
+
+button:disabled {
+  background-color: #244982;
+  color: #7697C8;
+  cursor: not-allowed;
 }
 
 @media (prefers-color-scheme: light) {

@@ -36,7 +36,7 @@ const TicketTypes: React.FC<Ticket> = ({
   const mintTicket = async() => {
     setIsMinting(true)
 
-    const ethereum = new ethers.providers.Web3Provider(window.ethereum)
+    const ethereum = new ethers.providers.Web3Provider(window.ethereum) as any
     // In ethers.js, providers allow you to query data from the blockchain. 
     // They represent the way you connect to the blockchain. 
     // With them you can only call view methods on contracts and get data from those contract.
@@ -55,7 +55,7 @@ const TicketTypes: React.FC<Ticket> = ({
     if (wallet.accounts.length > 0) {
       nftTickets
       .mintNFT({
-        from: wallet.accounts[0],
+        from: wallet.address!,
         value: priceHexValue,
       })
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -75,7 +75,6 @@ const TicketTypes: React.FC<Ticket> = ({
     }
   }
 
-  // eslint-disable-next-line no-extra-boolean-cast
   const cantMint = !Boolean(wallet) && !isMinting
 
   return (
