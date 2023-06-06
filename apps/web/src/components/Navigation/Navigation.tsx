@@ -42,7 +42,7 @@ export const Navigation = () => {
             )}
             {wallet && (
               <div>
-                {formatBalance(wallet.balance)} ETH
+                {wallet.balance} ETH
               </div>
             )}
           </>
