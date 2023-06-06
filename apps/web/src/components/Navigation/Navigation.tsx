@@ -5,7 +5,8 @@ import styles from './Navigation.module.css'
 
 export const Navigation = () => {
 
-  const { wallet, isConnecting, connectMetaMask } = useMetaMask()
+  const { wallet, isConnecting, connectMetaMask, terminate, sdkConnected } = useMetaMask()
+  console.log('sdkConnected: ', sdkConnected)
 
   return (
     <div className={styles.navigation}>
@@ -19,6 +20,9 @@ export const Navigation = () => {
               Connect MetaMask
             </button>
           }
+        <button onClick={terminate} >
+          Terminate
+        </button>
           {wallet.accounts.length > 0 &&
             <a
               className="text_link tooltip-bottom"

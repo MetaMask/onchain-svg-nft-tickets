@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect, createContext, PropsWithChildren, useContext, useCallback } from 'react'
-
-import { MetaMaskSDK } from '@metamask/sdk'
 import { MetaMaskInpageProvider } from '@metamask/providers'
+import { MetaMaskSDK } from '@metamask/sdk'
 import { formatBalance } from '~/utils'
 
 declare global {
@@ -22,9 +21,10 @@ interface MetaMaskContextData {
   error: boolean,
   errorMessage: string,
   isConnecting: boolean,
-  connected: boolean,
+  sdkConnected: boolean,
   connectMetaMask: () => void,
-  clearError: () => void
+  clearError: () => void,
+  terminate: () => void
 }
 
 const disconnectedState: WalletState = { accounts: [], balance: '', chainId: '' }
@@ -33,7 +33,7 @@ let _initialized = false;
 
 export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
   const [sdk, setSDK] = useState<MetaMaskSDK>()
-  const [connected, setConnected] = useState(false)
+  const [sdkConnected, setSdkConnected] = useState(false)
 
   const [isConnecting, setIsConnecting] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
@@ -43,9 +43,13 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
 
   // useCallback ensures that we don't uselessly re-create the _updateWallet function on every render
   const _updateWallet = useCallback(async (providedAccounts?: any) => {
-    const accounts = providedAccounts || await window.ethereum?.request(
-      { method: 'eth_accounts' },
-    )
+    console.log("calling updateWallet")
+    let accounts: any[] = [];
+    try {
+      accounts = providedAccounts || await window.ethereum?.request(
+        { method: 'eth_accounts' },
+      )
+    } catch (err) { }
 
     if (accounts.length === 0) {
       // If there are no accounts, then the user is disconnected
@@ -53,19 +57,22 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
       return
     }
 
-    const balance = formatBalance(await window.ethereum?.request({
+    const balanceRaw: string = await window.ethereum?.request({
       method: 'eth_getBalance',
       params: [accounts[0], 'latest'],
-    }))
-    const chainId = await window.ethereum?.request({
+    }) as string
+    const balance = formatBalance(balanceRaw)
+
+    const chainId:string = await window.ethereum?.request({
       method: 'eth_chainId',
-    })
+    }) as string
 
     setWallet({ accounts, balance, chainId })
   }, [])
 
   const updateWalletAndAccounts = useCallback(() => _updateWallet(), [_updateWallet])
   const updateWallet = useCallback((accounts: any) => _updateWallet(accounts), [_updateWallet])
+  const disconnectWallet = useCallback(() => setWallet(disconnectedState), [])
 
   const connectMetaMask = async () => {
     setIsConnecting(true)
@@ -85,7 +92,7 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     const clientSDK = new MetaMaskSDK({
       useDeeplink: false,
-      communicationServerUrl: import.meta.env.VITE_PUBLIC_COMM_SERVER_URL,
+      communicationServerUrl: 'https://metamask-sdk-socket.metafi.codefi.network/',
       autoConnect: {
         enable: true
       },
@@ -100,8 +107,13 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
         enabled: true,
       }
     })
-    setSDK(clientSDK);
+    setSDK(clientSDK)
   }, [])
+
+  const terminate = () => {
+    console.log("trying to terminate")
+    sdk?.terminate()
+  }
 
   /**
    * This logic checks if MetaMask is installed. If it is, then we setup some
@@ -110,31 +122,29 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
    * handlers whenever the MetaMaskProvider is unmounted.
    */
   useEffect(() => {
-    updateWalletAndAccounts()
-    window.ethereum?.on('accountsChanged', updateWallet)
-    window.ethereum?.on('chainChanged', updateWalletAndAccounts)
+    if (sdk?.isInitialized() && !_initialized) {
+      updateWalletAndAccounts()
+
+      window.ethereum?.on('_initialized', updateWalletAndAccounts)
+      window.ethereum?.on('connect', updateWalletAndAccounts)
+      window.ethereum?.on('_initialized', () => setSdkConnected(true))
+      window.ethereum?.on('connect', () => setSdkConnected(true))
+      window.ethereum?.on('accountsChanged', updateWallet)
+      window.ethereum?.on('chainChanged', updateWalletAndAccounts)
+      window.ethereum?.on('disconnect', disconnectWallet)
+      window.ethereum?.on('disconnect', () => setSdkConnected(false))
+
+      _initialized = true
+    }
 
     return () => {
+      window.ethereum?.removeListener('_initialized', updateWalletAndAccounts)
+      window.ethereum?.removeListener('connect', updateWalletAndAccounts)
       window.ethereum?.removeListener('accountsChanged', updateWallet)
       window.ethereum?.removeListener('chainChanged', updateWalletAndAccounts)
+      window.ethereum?.removeListener('disconnect', disconnectWallet)
     }
-  }, [updateWallet, updateWalletAndAccounts])
-
-  useEffect(() => {
-    if (sdk?.isInitialized() && !_initialized) {
-      window.ethereum?.on('_initialized', () => {
-        setConnected(true)
-      })
-      window.ethereum?.on('connect', (_connectInfo: any) => {
-        setConnected(true)
-      })
-      window.ethereum?.on("disconnect", (error) => {
-        setConnected(false)
-      })
-      _initialized = true;
-    }
-
-  }, [sdk])
+  }, [updateWallet, updateWalletAndAccounts, disconnectWallet, sdk?.isInitialized()])
 
   return (
     <MetaMaskContext.Provider
@@ -143,9 +153,10 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
         error: !!errorMessage,
         errorMessage,
         isConnecting,
-        connected,
+        sdkConnected,
         connectMetaMask,
         clearError,
+        terminate
       }}
     >
       {children}

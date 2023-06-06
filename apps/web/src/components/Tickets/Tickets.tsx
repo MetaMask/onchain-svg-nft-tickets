@@ -33,28 +33,29 @@ const TicketTypes: React.FC<Ticket> = ({
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
-  const mintTicket = async () => {
+  const mintTicket = async() => {
     setIsMinting(true)
 
-    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const ethereum = new ethers.providers.Web3Provider(window.ethereum)
     // In ethers.js, providers allow you to query data from the blockchain. 
     // They represent the way you connect to the blockchain. 
     // With them you can only call view methods on contracts and get data from those contract.
     // Signers are authenticated providers connected to the current address in MetaMask.
-    const signer = provider.getSigner()
+    const signer = ethereum.getSigner()
 
     const factory = new ETHTickets__factory(signer)
     const networkId = import.meta.env.VITE_PUBLIC_NETWORK_ID
-
+    
     if(!isSupportedNetwork(networkId)) {
       throw new Error('Set either `0x5` for goerli or `0x13881` for mumbai in apps/web/.env or .env.local')
     }
     
     const nftTickets = factory.attach(config[networkId].contractAddress)
 
-    nftTickets
+    if (wallet.accounts.length > 0) {
+      nftTickets
       .mintNFT({
-        from: wallet.accounts[0]!,
+        from: wallet.accounts[0],
         value: priceHexValue,
       })
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -71,6 +72,7 @@ const TicketTypes: React.FC<Ticket> = ({
         setErrorMessage(error?.message)
         setIsMinting(false)
       })
+    }
   }
 
   // eslint-disable-next-line no-extra-boolean-cast

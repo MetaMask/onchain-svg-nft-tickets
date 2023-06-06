@@ -1,7 +1,7 @@
 {
-  "name": "vite-linea-sdk",
-  "private": true,
+  "name": "web",
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "npx vite",
@@ -13,6 +13,7 @@
   "dependencies": {
     "@metamask/sdk": "^0.3.0",
     "ethers": "^5.7.2",
+    "json-rpc-engine": "^6.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.9.0"

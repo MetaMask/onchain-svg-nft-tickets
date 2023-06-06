@@ -1,9 +1,9 @@
 import { useMetaMask } from '~/hooks/useMetaMask'
-import { formatChainAsNum } from '~/utils'
+// import { formatChainAsNum } from '~/utils'
 import { ethers } from 'ethers'
 
-// import Tickets from '~/components/Tickets/Tickets'
-// import TicketsOwned from '~/components/TicketsOwned/TicketsOwned'
+import Tickets from '~/components/Tickets/Tickets'
+import TicketsOwned from '~/components/TicketsOwned/TicketsOwned'
 import styles from './Display.module.css'
 
 export const Display = () => {
@@ -34,16 +34,16 @@ export const Display = () => {
 
   return (
     <div className={styles.display}>
-      { wallet.accounts.length > 0 &&
+      {/* { wallet.accounts.length > 0 &&
         <>
           <div>Wallet Accounts: {wallet.accounts[0]}</div>
           <div>Wallet Balance: {wallet.balance}</div>
           <div>Hex ChainId: {wallet.chainId}</div>
           <div>Numeric ChainId: {formatChainAsNum(wallet.chainId)}</div>
           </>
-        }
-      {/* <Tickets tickets={tickets} />
-      <TicketsOwned />  */}
+        } */}
+      <Tickets tickets={tickets} />
+      <TicketsOwned /> 
     </div>
   )
 }
