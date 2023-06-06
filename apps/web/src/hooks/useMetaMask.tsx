@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect, createContext, PropsWithChildren, useContext, useCallback } from 'react'
-import { MetaMaskInpageProvider } from '@metamask/providers'
 import { MetaMaskSDK } from '@metamask/sdk'
 import { formatBalance } from '~/utils'
+import { ethers } from 'ethers'
 
 interface WalletState {
   accounts: any[],

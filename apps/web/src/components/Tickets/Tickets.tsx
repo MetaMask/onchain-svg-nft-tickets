@@ -7,9 +7,6 @@ import { config, isSupportedNetwork } from '~/lib/config'
 
 import { SiEthereum } from 'react-icons/si'
 
-// import { Button, FlexContainer, FlexItem } from '../styledComponents/general'
-// import { HeadingText, TicketsView, TicketType, TicketTypeText, StyledAlert } from '../styledComponents/tickets'
-
 import styles from './Tickets.module.css'
 
 interface Ticket {
@@ -36,12 +33,14 @@ const TicketTypes: React.FC<Ticket> = ({
   const mintTicket = async() => {
     setIsMinting(true)
 
-    const ethereum = new ethers.providers.Web3Provider(window.ethereum) as any
+    const provider = new ethers.providers.Web3Provider(
+      window.ethereum as unknown as ethers.providers.ExternalProvider,
+    )
     // In ethers.js, providers allow you to query data from the blockchain. 
     // They represent the way you connect to the blockchain. 
     // With them you can only call view methods on contracts and get data from those contract.
     // Signers are authenticated providers connected to the current address in MetaMask.
-    const signer = ethereum.getSigner()
+    const signer = provider.getSigner()
 
     const factory = new ETHTickets__factory(signer)
     const networkId = import.meta.env.VITE_PUBLIC_NETWORK_ID

@@ -22,22 +22,33 @@ type TicketFormatted = {
 
 const TicketsOwned = () => {
   const [ticketCollection, setTicketCollection] = useState<TicketFormatted[]>([])
-  
   const { wallet } = useMetaMask()
 
+  console.log('TicketsOwned wallet: ', wallet)
+
   useEffect(() => {
-    if (typeof window !== 'undefined' && wallet.address !== null) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum)
+    if (typeof window !== 'undefined' && wallet.address !== null && window.ethereum) {
+
+      const provider = new ethers.providers.Web3Provider(
+        window.ethereum as unknown as ethers.providers.ExternalProvider,
+      )
       const signer = provider.getSigner()
 
+      console.log('TicketsOwned provider: ', provider)
+
       const factory = new ETHTickets__factory(signer)
+      console.log('TicketsOwned factory: ', factory)
 
       if (!isSupportedNetwork(wallet.chainId)) {
         return
       }
 
+      console.log('TicketsOwned wallet.chainId: ', wallet.chainId)
+
       const nftTickets = factory.attach(config[wallet.chainId].contractAddress)
       const ticketsRetrieved: TicketFormatted[] = []
+
+      console.log('TicketsOwned nftTickets: ', nftTickets)
 
       nftTickets.walletOfOwner(wallet.address).then((ownedTickets) => {
         const promises = ownedTickets.map(async (t) => {
@@ -72,6 +83,8 @@ const TicketsOwned = () => {
       />
     </div>
   ))
+
+  console.log('TicketsOwned listOfTickets: ', listOfTickets)
 
   return (
     <div className={styles.ticketsOwnedView}>
