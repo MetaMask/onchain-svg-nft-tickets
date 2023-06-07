@@ -30,6 +30,9 @@ const TicketTypes: React.FC<Ticket> = ({
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
+  const networkId = import.meta.env.VITE_PUBLIC_NETWORK_ID
+  const notSupportedNetwork = wallet.chainId !== networkId
+
   const mintTicket = async() => {
     setIsMinting(true)
 
@@ -74,14 +77,15 @@ const TicketTypes: React.FC<Ticket> = ({
     }
   }
 
-  const cantMint = !Boolean(wallet) && !isMinting
+  const disableMint = Boolean(wallet) && isMinting
+  console.log(`disableMint: `, disableMint)
 
   return (
     <div className={styles.flexItem}>
       <div className={styles.ticketType}>
         <h2>{description}</h2>
         <p>{price} ETH</p>
-        <button disabled={cantMint} onClick={mintTicket}>
+        <button disabled={disableMint} onClick={mintTicket}>
           <SiEthereum /> {isMinting ? 'Minting...' : 'Mint'} Ticket
         </button>
         {
