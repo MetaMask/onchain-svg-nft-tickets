@@ -24,7 +24,7 @@ export const Navigation = () => {
             </button>
           }
           <>
-            {!supportedNetwork && (
+            {wallet.chainId !== networkId && (
               <SwitchNetwork />
             )}
             {wallet && (
