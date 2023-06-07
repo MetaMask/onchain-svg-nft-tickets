@@ -17,7 +17,7 @@ export const config = {
   },
   '0x13881': {
     name: 'Mumbai',
-    contractAddress: '0x313E65fE579D6882c5D495305A28174733CbDf06',// ETHTickets.networks[0x13881].address,
+    contractAddress: '',// ETHTickets.networks[0x13881].address,
     symbol: 'MATIC',
     blockExplorer: 'https://mumbai.polygonscan.com',
     rpcUrl: 'https://rpc-mumbai.maticvigil.com',

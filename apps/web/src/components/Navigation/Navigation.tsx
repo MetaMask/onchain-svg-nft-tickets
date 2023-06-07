@@ -1,7 +1,7 @@
 import { SiEthereum } from 'react-icons/si'
 import { useMetaMask } from '~/hooks/useMetaMask'
 import { formatAddress, formatChainAsNum } from '~/utils'
-import { config, isSupportedNetwork } from '~/lib/config'
+import { config } from '~/lib/config'
 import SwitchNetwork from '~/components/SwitchNetwork/SwitchNetwork'
 import styles from './Navigation.module.css'
 
@@ -30,12 +30,12 @@ export const Navigation = () => {
               <SwitchNetwork />
             )}
             {sdkConnected && (
-              <button className={styles.terminate}>Terminate</button>
+              <button className={styles.terminate} onClick={terminate}>Terminate</button>
             )}
             {wallet && wallet.accounts.length > 0 && (
               <>
                 <a
-                  href={chainInfo?.blockExplorer}
+                  href={`${chainInfo?.blockExplorer}/address/${chainInfo?.contractAddress}`}
                   target="_blank"
                   data-tooltip="Open in Block Explorer"
                 >
