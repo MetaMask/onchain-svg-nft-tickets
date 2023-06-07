@@ -13,9 +13,6 @@ export const Navigation = () => {
 
   const chainInfo = config[networkId as keyof typeof config]
 
-  console.log(`notSupportedNetwork: `,notSupportedNetwork)
-  console.log(`chainInfo: `,chainInfo)
-
   return (
     <div className={styles.navigation}>
       <div className={styles.flexContainer}>
@@ -38,7 +35,6 @@ export const Navigation = () => {
             {wallet && wallet.accounts.length > 0 && (
               <>
                 <a
-                  className="text_link tooltip-bottom"
                   href={chainInfo?.blockExplorer}
                   target="_blank"
                   data-tooltip="Open in Block Explorer"
@@ -46,7 +42,6 @@ export const Navigation = () => {
                   {chainInfo.name}
                 </a> &nbsp;| &nbsp;
                 <a
-                  className="text_link tooltip-bottom"
                   href={`https://etherscan.io/address/${wallet}`}
                   target="_blank"
                   data-tooltip="Open in Block Explorer"
