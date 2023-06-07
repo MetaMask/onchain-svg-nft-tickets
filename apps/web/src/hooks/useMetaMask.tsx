@@ -107,7 +107,6 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
   }, [])
 
   const terminate = () => {
-    console.log("trying to terminate")
     sdk?.terminate()
   }
 
