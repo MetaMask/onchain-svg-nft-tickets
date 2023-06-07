@@ -37,7 +37,6 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
 
   // useCallback ensures that we don't uselessly re-create the _updateWallet function on every render
   const _updateWallet = useCallback(async (providedAccounts?: any) => {
-    console.log("calling updateWallet")
     let accounts: any[] = [];
     try {
       accounts = providedAccounts || await window.ethereum?.request(

@@ -24,6 +24,17 @@ const TicketsOwned = () => {
   const [ticketCollection, setTicketCollection] = useState<TicketFormatted[]>([])
   const { wallet } = useMetaMask()
 
+  const listOfTickets = ticketCollection.map((ticket) => (
+    <div className={styles.svgItem} key={`ticket${ticket.tokenId}`}>
+      <img
+        width={200}
+        height={200}
+        src={ticket.svgImage}
+        alt={`Ticket# ${ticket.tokenId}`}
+      />
+    </div>
+  ))
+
   useEffect(() => {
     if (typeof window !== 'undefined' && wallet.address !== null && window.ethereum) {
 
@@ -61,18 +72,9 @@ const TicketsOwned = () => {
         Promise.all(promises).then(() => setTicketCollection(ticketsRetrieved))
       })
     }
-  }, [wallet.address, wallet.chainId])
+  }, [wallet.address, wallet.chainId, listOfTickets])
 
-  const listOfTickets = ticketCollection.map((ticket) => (
-    <div className={styles.svgItem} key={`ticket${ticket.tokenId}`}>
-      <img
-        width={200}
-        height={200}
-        src={ticket.svgImage}
-        alt={`Ticket# ${ticket.tokenId}`}
-      />
-    </div>
-  ))
+
 
   return (
     <div className={styles.ticketsOwnedView}>

@@ -78,7 +78,6 @@ const TicketTypes: React.FC<Ticket> = ({
   }
 
   const disableMint = Boolean(wallet) && isMinting
-  console.log(`disableMint: `, disableMint)
 
   return (
     <div className={styles.flexItem}>
