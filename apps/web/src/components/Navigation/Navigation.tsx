@@ -7,7 +7,7 @@ import styles from './Navigation.module.css'
 
 export const Navigation = () => {
 
-  const { wallet, isConnecting, connectMetaMask, terminate, sdkConnected } = useMetaMask()
+  const { wallet, isConnecting, connectMetaMask, sdkConnected } = useMetaMask()
   const networkId = import.meta.env.VITE_PUBLIC_NETWORK_ID
   const notSupportedNetwork = wallet.chainId !== networkId
 
@@ -26,11 +26,11 @@ export const Navigation = () => {
             </button>
           }
           <>
+            {/* {wallet.accounts.length > 0 &&
+              <span>{sdkConnected ? "MOBILE" : "EXTENSION"} &nbsp;</span>
+            } */}
             {wallet.accounts.length > 0 && notSupportedNetwork && (
               <SwitchNetwork />
-            )}
-            {sdkConnected && (
-              <button className={styles.terminate} onClick={terminate}>Terminate</button>
             )}
             {wallet && wallet.accounts.length > 0 && (
               <>
