@@ -17,10 +17,10 @@ git clone https://github.com/MetaMask/onchain-svg-nft-tickets && cd onchain-svg-
 git checkout vite-linea-sdk
 ```
 
-Install dependencies from root of project:
+Open in your Editor of choice and install dependencies from root of project:
 
 ```bash
-npm i
+npm install
 ```
 
 If the version of MetaMask SDK installed is version `0.3.0`, there is a typo in the `package.json` which will cause an issue if you are working with TypeScript. The definitions file should be:
