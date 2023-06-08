@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "build": "truffle compile && node scripts/generate_types.js",
+    "compile": "truffle compile",
     "migrate": "truffle migrate",
     "test": "truffle test",
     "local": "truffle develop --log",

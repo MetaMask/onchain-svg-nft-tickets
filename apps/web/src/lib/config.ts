@@ -1,16 +1,14 @@
-import ETHTickets from '~/lib/contract-abis/ETHTickets.json'
-
 export const config = {
   '0x13881': {
     name: 'Mumbai',
-    contractAddress: ETHTickets.networks[0x13881].address,
+    contractAddress: '',
     symbol: 'MATIC',
     blockExplorer: 'https://mumbai.polygonscan.com',
     rpcUrl: 'https://rpc-mumbai.maticvigil.com',
   },
   '0xe704': {
     name: 'Linea',
-    contractAddress: ETHTickets.networks[0xe704].address,
+    contractAddress: '',
     symbol: 'LineaETH',
     blockExplorer: 'https://explorer.goerli.linea.build',
     rpcUrl: 'https://rpc.goerli.linea.build',
