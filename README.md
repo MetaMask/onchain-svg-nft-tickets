@@ -13,7 +13,8 @@ Once running we should be able to Mint new tickets, respond to changes from the 
 Clone the project and switch to the proper branch:
 
 ```bash
-git clone https://github.com/MetaMask/onchain-svg-nft-tickets && cd onchain-svg-nft-tickets && \ 
+git clone https://github.com/MetaMask/onchain-svg-nft-tickets && \ 
+cd onchain-svg-nft-tickets && \ 
 git checkout vite-linea-sdk
 ```
 
