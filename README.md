@@ -22,6 +22,20 @@ Install dependencies from root of project:
 npm i
 ```
 
+If the version of MetaMask SDK installed is version `0.3.0`, there is a typo in the `package.json` which will cause an issue if you are working with TypeScript. The definitions file should be:
+
+```json
+  "types": "dist/browser/es/src/index.d.ts",
+```
+
+instead of
+
+```json
+  "types": "dist/browser/es/index.d.ts",
+```
+
+> NOTE: This can be changed while working locally but understand that if you overwrite you `node_modules` you will have to make this change again. This is being fixed and will not be an issue in versions `0.3.1` and beyond. I point this out as you won't be able to build and will get a red squiggly line under you Metamask SDK import line if this is not fixed manually. You can change this in our project by looking in the `node_modules` directory in the root of the project and updating the `@metamask/sdk`'s `package.json`. This is also noted in the workshop video.
+
 Create an Infura account and setup an [Infura](https://www.infura.io) account and create an API Key 
 
 - Network: "Web3 API"
@@ -36,14 +50,12 @@ Create Environment Variable file inside the `apps/web` root:
 
 ```bash
 # Use hexadecimal network id 
-#   localhost: '0x539'
 #   Linea: '0xe704'
-#   Goerli: '0x5' 
 #   Mumbai: '0x13881'
 VITE_PUBLIC_NETWORK_ID=[LINEA-HEX-CHAIN-ID-GOES-HERE]
 
 # Get API Key from Infura dashboard:
-VITE_PUBLIC_INFURA_PROJECT_ID=[API-KEY-GOES-HERE]
+VITE_PUBLIC_INFURA_PROJECT_ID=[INFURA-API-KEY-GOES-HERE]
 ```
 
 Create Environment Variable file inside the `apps/blockchain` root:
@@ -51,7 +63,55 @@ Create Environment Variable file inside the `apps/blockchain` root:
 - Rename the file at `apps/blockchain/.env.example` to `.env`
 - At this point the `.env` file are no longer tracked by Git
 
-clone project and run `npm i && npm run build`
-to generate contract-abis `truffle compile`
-Deploy contract on Linea: `npm run deploy:mumbai --workspace blockchain`
-Run frontend against deployed contract: `npm run dev:testnet`
+```bash
+# grab from your dashboard, also known as API key
+INFURA_PROJECT_ID=[INFURA-API-KEY-GOES-HERE]
+# export from your metamask wallet
+PRIVATE_KEY=[MM-PRIVATE-KEY-GOES]
+```
+
+Build project and compile contracts to generate `apps/web/contract-abis`:
+
+```bash
+npm run build && truffle compile
+```
+
+Deploy contract on Linea: 
+
+```bash
+npm run deploy:linea --workspace blockchain
+```
+
+Deploy contract on Mumbai: 
+
+```bash
+npm run deploy:mumbai --workspace blockchain
+```
+
+Run frontend against deployed contract: 
+
+```bash
+npm run dev:testnet
+```
+
+What to test:
+
+From here we will first test our client running with MetaMask Browser Extension enabled
+
+- Connect multiple accounts
+- Can we change chain and see it reflected in the UI
+- Do we get a SwitchChain button and does it work
+- Can we change accounts and see it reflected in the UI
+- Mint a Ticket NFT
+- See the Ticket NFT show up at bottom of page
+- Disconnect from both accounts and see it reflected in the UI
+- Disable MetaMask Browser Extension
+- Connect with MetaMask Mobile
+- Switch chains and ensure SwitchChain button shows up in the UI
+- Mint a Ticket NFT
+- See the Ticket NFT show up at bottom of page
+- Disconnect from Metamask Mobile and ensure we are prompted in UI
+
+This is just a demo application, but it covers a lot of the basics you would need in a ral world Dapp that uses MetaMask and gives your users the ability to connect to both Browser Extension and Mobile from their Dapp which up until MetaMask SDK was no easy task.
+
+The SDK is new and we want to hear what you think, what features you would like to see as well, we really want you to apply for the Linea and MetaMask SDK bounties at ETH Waterloo.

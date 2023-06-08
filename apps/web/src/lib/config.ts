@@ -1,30 +1,16 @@
-// import ETHTickets from '~/lib/contract-abis/ETHTickets.json'
+import ETHTickets from '~/lib/contract-abis/ETHTickets.json'
 
 export const config = {
-  '0x539': {
-    name: 'Localhost 9545',
-    contractAddress: '',
-    symbol: 'ETH',
-    blockExplorer: null, // leave null for testing
-    rpcUrl: `http://localhost:9545`,
-  },
-  '0x5': {
-    name: 'Goerli',
-    contractAddress: '',
-    symbol: 'ETH',
-    blockExplorer: 'https://goerli.etherscan.io',
-    rpcUrl: `https://goerli.blockpi.network/v1/rpc/public`,
-  },
   '0x13881': {
     name: 'Mumbai',
-    contractAddress: '',// ETHTickets.networks[0x13881].address,
+    contractAddress: ETHTickets.networks[0x13881].address,
     symbol: 'MATIC',
     blockExplorer: 'https://mumbai.polygonscan.com',
     rpcUrl: 'https://rpc-mumbai.maticvigil.com',
   },
   '0xe704': {
     name: 'Linea',
-    contractAddress: '0x1cCb83fd77f32442DCB4265f4d7cD82149f0a573',
+    contractAddress: ETHTickets.networks[0xe704].address,
     symbol: 'LineaETH',
     blockExplorer: 'https://explorer.goerli.linea.build',
     rpcUrl: 'https://rpc.goerli.linea.build',
