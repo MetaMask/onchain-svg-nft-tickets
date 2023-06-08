@@ -75,7 +75,7 @@ PRIVATE_KEY=[MM-PRIVATE-KEY-GOES]
 Build project and compile contracts to generate `apps/web/contract-abis`:
 
 ```bash
-npm run build && truffle compile
+npm run build
 ```
 
 Deploy contract on Linea: 
