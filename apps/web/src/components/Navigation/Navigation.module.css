@@ -32,6 +32,7 @@
 }
 
 .rightNav {
+  display: flex;
   color: #ddd;
   margin-left: auto;
   line-height: 36px;
@@ -46,4 +47,18 @@
 
 .terminate {
   margin-right: 1em;
+}
+
+.tag {
+  display: flex;
+  height: 16px;
+  align-items: center;
+  font-weight: 600;
+  margin: 9px 1em 0 0;
+  font-size: 9px;
+  padding: 3px;
+  color: #aaa;
+  outline: 1px solid #81288d;
+  border-radius: 4px;
+  user-select: none;
 }

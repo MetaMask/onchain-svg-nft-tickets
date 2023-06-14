@@ -73,7 +73,7 @@ const TicketsOwned = () => {
         Promise.all(promises).then(() => setTicketCollection(ticketsRetrieved))
       })
     }
-  }, [wallet.address, wallet.chainId])
+  }, [wallet.address, wallet.chainId, sdkConnected])
 
 
 

@@ -19,6 +19,7 @@ interface MetaMaskContextData {
   sdkConnected: boolean,
   connectMetaMask: () => void,
   clearError: () => void,
+  setError: (error: string) => void,
   terminate: () => void
 }
 
@@ -32,6 +33,7 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
   const [isConnecting, setIsConnecting] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const clearError = () => setErrorMessage('')
+  const setError = (error: string) => setErrorMessage(error)
 
   const [wallet, setWallet] = useState(disconnectedState)
 
@@ -71,7 +73,6 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
 
   const connectMetaMask = async () => {
     setIsConnecting(true)
-
     try {
       const accounts = await window.ethereum?.request({
         method: 'eth_requestAccounts',
@@ -127,6 +128,7 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
       window.ethereum?.on('chainChanged', updateWalletAndAccounts)
       window.ethereum?.on('disconnect', disconnectWallet)
       window.ethereum?.on('disconnect', () => setSdkConnected(false))
+      window.ethereum?.on('disconnect', () => setIsConnecting(false))
 
       _initialized = true
     }
@@ -150,6 +152,7 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
         sdkConnected,
         connectMetaMask,
         clearError,
+        setError,
         terminate,
       }}
     >

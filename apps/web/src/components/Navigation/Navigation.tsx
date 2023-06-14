@@ -20,15 +20,15 @@ export const Navigation = () => {
           <SiEthereum /> ETH Atlantis
         </div>
         <div className={styles.rightNav}>
-          {window.ethereum?.isMetaMask && wallet.accounts.length < 1 &&
+          {wallet.accounts.length < 1 &&
             <button disabled={isConnecting} onClick={connectMetaMask}>
               Connect MetaMask
             </button>
           }
           <>
-            {/* {wallet.accounts.length > 0 &&
-              <span>{sdkConnected ? "MOBILE" : "EXTENSION"} &nbsp;</span>
-            } */}
+            {wallet.accounts.length > 0 &&
+              <div className={styles.tag}>{sdkConnected ? "MOBILE" : "EXTENSION"}</div>
+            }
             {wallet.accounts.length > 0 && notSupportedNetwork && (
               <SwitchNetwork />
             )}
@@ -37,14 +37,14 @@ export const Navigation = () => {
                 <a
                   href={`${chainInfo?.blockExplorer}/address/${chainInfo?.contractAddress}`}
                   target="_blank"
-                  data-tooltip="Open in Block Explorer"
+                  title="Open in Block Explorer"
                 >
                   {chainInfo.name}
                 </a> &nbsp;| &nbsp;
                 <a
                   href={`https://etherscan.io/address/${wallet}`}
                   target="_blank"
-                  data-tooltip="Open in Block Explorer"
+                  title="Open in Block Explorer"
                 >
                   {formatAddress(wallet.address)}
                 </a>

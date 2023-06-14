@@ -24,14 +24,9 @@ const TicketTypes: React.FC<Ticket> = ({
   description, price, priceHexValue,
 }) => {
 
-  const { wallet } = useMetaMask()
-
+  const { wallet, setError, sdkConnected } = useMetaMask()
   const [isMinting, setIsMinting] = useState(false)
-  const [error, setError] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
-
   const networkId = import.meta.env.VITE_PUBLIC_NETWORK_ID
-  const notSupportedNetwork = wallet.chainId !== networkId
 
   const mintTicket = async() => {
     setIsMinting(true)
@@ -70,14 +65,13 @@ const TicketTypes: React.FC<Ticket> = ({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .catch((error: any) => {
         console.log(error)
-        setError(true)
-        setErrorMessage(error?.message)
+        setError(error?.code)
         setIsMinting(false)
       })
     }
   }
 
-  const disableMint = Boolean(wallet) && isMinting
+  const disableMint = !wallet.address || isMinting
 
   return (
     <div className={styles.flexItem}>
@@ -87,15 +81,6 @@ const TicketTypes: React.FC<Ticket> = ({
         <button disabled={disableMint} onClick={mintTicket}>
           <SiEthereum /> {isMinting ? 'Minting...' : 'Mint'} Ticket
         </button>
-        {
-          error && (
-            <div className={styles.styledAlert} onClick={() => setError(false)}>
-              <span>
-                <strong>Error:</strong> {errorMessage}
-              </span>
-            </div>
-          )
-        }
       </div>
     </div>
   )
