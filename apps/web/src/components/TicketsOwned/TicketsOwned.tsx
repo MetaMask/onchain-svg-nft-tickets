@@ -22,7 +22,7 @@ type TicketFormatted = {
 
 const TicketsOwned = () => {
   const [ticketCollection, setTicketCollection] = useState<TicketFormatted[]>([])
-  const { wallet } = useMetaMask()
+  const { wallet, sdkConnected } = useMetaMask()
 
   const listOfTickets = ticketCollection.map((ticket) => (
     <div className={styles.svgItem} key={`ticket${ticket.tokenId}`}>
@@ -36,6 +36,7 @@ const TicketsOwned = () => {
   ))
 
   useEffect(() => {
+    console.log('ticketsOwned: UseEffect')
     if (typeof window !== 'undefined' && wallet.address !== null && window.ethereum) {
 
       const provider = new ethers.providers.Web3Provider(
@@ -72,7 +73,7 @@ const TicketsOwned = () => {
         Promise.all(promises).then(() => setTicketCollection(ticketsRetrieved))
       })
     }
-  }, [wallet.address, wallet.chainId, listOfTickets])
+  }, [wallet.address, wallet.chainId])
 
 
 
