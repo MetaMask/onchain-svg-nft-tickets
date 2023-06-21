@@ -14,6 +14,11 @@
   -webkit-text-size-adjust: 100%;
 }
 
+:root button {
+  color: #FFF !important;
+
+}
+
 a {
   font-weight: 500;
   color: #e757fa;
@@ -35,7 +40,7 @@ h1 {
   line-height: 1.1;
 }
 
-button {
+#root button {
   border-radius: 6px;
 
   box-shadow: 0 0 6px 0 rgba(157, 96, 212, 0.5);
@@ -63,11 +68,11 @@ button {
   user-select: none;
 }
 
-button:hover {
+#root button:hover {
   background-color: #244982;
 }
 
-button:disabled {
+#root button:disabled {
   background-color: #244982;
   color: #7697C8;
   cursor: not-allowed;
