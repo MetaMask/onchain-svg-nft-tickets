@@ -24,20 +24,6 @@ Open in your Editor of choice and install dependencies from root of project:
 npm install
 ```
 
-If the version of MetaMask SDK installed is version `0.3.0`, there is a typo in the `package.json` which will cause an issue if you are working with TypeScript. The definitions file should be:
-
-```json
-  "types": "dist/browser/es/src/index.d.ts",
-```
-
-instead of
-
-```json
-  "types": "dist/browser/es/index.d.ts",
-```
-
-> NOTE: This can be changed while working locally but understand that if you overwrite you `node_modules` you will have to make this change again. This is being fixed and will not be an issue in versions `0.3.1` and beyond. I point this out as you won't be able to build and will get a red squiggly line under you Metamask SDK import line if this is not fixed manually. You can change this in our project by looking in the `node_modules` directory in the root of the project and updating the `@metamask/sdk`'s `package.json`. This is also noted in the workshop video.
-
 Create an Infura account and setup an [Infura](https://www.infura.io) account and create an API Key 
 
 - Network: "Web3 API"
