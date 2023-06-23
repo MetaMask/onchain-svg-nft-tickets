@@ -1,6 +1,6 @@
 # ViteJS + React, MetaMask SDK and Linea Testnet
 
-This branch of the Onchain SVG NFT workshop repo is a workshop that will walk you through an existing Mono Repo that has a blockchain project located in `/apps/blockchain` which utilizes Truffle to deploy a Solidity Smart Contract that will allow us to mint Onchain SVG Tickets to a fictitious event named ETH Atlantis (not and official ETH Global Event).  
+This branch of the Onchain SVG NFT workshop repo is a workshop that will walk you through a Mono Repo setup using [Turbo](https://turbo.build/) for the build. There is a blockchain project located in `/apps/blockchain` which utilizes Truffle to deploy a Solidity Smart Contract that will allow us to mint Onchain SVG Tickets for a fictitious event named "ETH Atlantis" (not and official ETH Global Event).  
 
 Next we have a client application built with ViteJS + React w/ TypeScript located in `apps/web` that utilizes MetaMask SDK to connect our React application to either MetaMask Browser extension (if installed) or a MetaMask Mobile wallet if a MetaMask browser extension is not found. We show you how to conditionally render UI to connect, switch chains and display wallet information from MetaMask Browser Extension or MetaMask Mobile. As well, we have provided a MetaMask Context Provider and a `useMetaMask` hook to help you manage MetaMask wallet state in the scenario of connecting to either MetaMask Extension or Mobile.
 
