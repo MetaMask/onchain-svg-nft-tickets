@@ -2,7 +2,6 @@
 import { useState, useEffect, createContext, PropsWithChildren, useContext, useCallback } from 'react'
 import { MetaMaskSDK } from '@metamask/sdk'
 import { formatBalance } from '~/utils'
-import { ethers } from 'ethers'
 
 interface WalletState {
   accounts: any[],

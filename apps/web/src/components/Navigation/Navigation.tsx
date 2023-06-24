@@ -40,12 +40,11 @@ export const Navigation = () => {
                     target="_blank"
                     title="Open in Block Explorer"
                   >
-                    🟢 {chainInfo.name}:{formatChainAsNum(wallet.chainId)}
+                    {chainInfo.name}:{formatChainAsNum(wallet.chainId)}
                   </a>
                 }
                  &nbsp;|&nbsp;
-                <a
-                  href={`https://etherscan.io/address/${wallet}`}
+                <a href={`https://etherscan.io/address/${wallet}`}
                   target="_blank"
                   title="Open in Block Explorer"
                 >
