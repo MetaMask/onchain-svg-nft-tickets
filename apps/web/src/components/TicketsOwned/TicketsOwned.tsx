@@ -52,30 +52,29 @@ const TicketsOwned = () => {
       const nftTickets = factory.attach(config[wallet.chainId].contractAddress)
       const ticketsRetrieved: TicketFormatted[] = []
 
-      nftTickets.walletOfOwner(wallet.address).then((ownedTickets) => {
-        const promises = ownedTickets.map(async (t) => {
-          const currentTokenId = t.toString()
-          const currentTicket = await nftTickets.tokenURI(currentTokenId)
+      nftTickets.walletOfOwner(wallet.address)
+        .then((ownedTickets) => {
+          const promises = ownedTickets.map(async (token) => {
+            const currentTokenId = token.toString()
+            const currentTicket = await nftTickets.tokenURI(currentTokenId)
 
-          const base64ToString = window.atob(
-            currentTicket.replace('data:application/json;base64,', ''),
-          )
-          const nftData: NftData = JSON.parse(base64ToString)
+            const base64ToString = window.atob(
+              currentTicket.replace('data:application/json;base64,', ''),
+            )
+            const nftData: NftData = JSON.parse(base64ToString)
 
-          ticketsRetrieved.push({
-            tokenId: currentTokenId,
-            svgImage: nftData.image,
-            ticketType: nftData.attributes.find(
-              (t) => t.trait_type === 'Ticket Type',
-            ),
-          } as TicketFormatted)
+            ticketsRetrieved.push({
+              tokenId: currentTokenId,
+              svgImage: nftData.image,
+              ticketType: nftData.attributes.find(
+                (ticket) => ticket.trait_type === 'Ticket Type',
+              ),
+            } as TicketFormatted)
+          })
+          Promise.all(promises).then(() => setTicketCollection(ticketsRetrieved))
         })
-        Promise.all(promises).then(() => setTicketCollection(ticketsRetrieved))
-      })
     }
   }, [wallet.address, wallet.chainId, sdkConnected])
-
-
 
   return (
     <div className={styles.ticketsOwnedView}>
